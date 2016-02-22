@@ -1,20 +1,33 @@
 
 import os
+import sys
 from codecs import open
 from setuptools import setup, find_packages
 
 
-here = os.path.abspath(os.path.dirname(__file__))
+version = '0.0.1'
 
+
+here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
+
+
+if sys.argv[-1] == 'publish':
+    import sh
+    version_label = 'v{}'.format(version)
+    sh.git.tag(a=version_label, m=version_label)
+    sh.git.push('origin', 'master', '--tags')
+    sh.python('setup.py', 'sdist', 'upload')
+    sh.python('setup.py', 'bdist_wheel', 'upload')
+    sys.exit()
 
 
 setup(
     name='danube-delta',
     description='Honza Javorek\'s Pelican setup',
     long_description=long_description,
-    version='0.0.1',
+    version=version,
     url='http://github.com/honzajavorek/danube-delta',
     author='Honza Javorek',
     author_email='mail@honzajavorek.cz',
