@@ -11,7 +11,7 @@ with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 
 setup(
-    name='danube_delta',
+    name='danube-delta',
     description='Honza Javorek\'s Pelican setup',
     long_description=long_description,
     version='0.0.1',
@@ -28,16 +28,17 @@ setup(
         'python-slugify',
         'click',
         'sh',
+        'flake8',
+        'markdown',
     ],
-    extras_require={  # pip install -e .[dev,test]
-        'dev': ['flake8'],
-        'test': ['flake8'],
+    entry_points={
+        'console_scripts': [
+            'blog = danube_delta.cli:blog'
+        ]
     },
-    entry_points='''
-        [console_scripts]
-        blog=danube_delta.cli:main
-    ''',
     classifiers=[
+        'Environment :: Console',
+        'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',

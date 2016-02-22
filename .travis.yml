@@ -2,11 +2,11 @@ language: python
 python:
     - "3.5"
 install:
-    - "pip install -e .[test]"
+    - "pip install -e ."
 script:
     - "flake8 ."
     - "which blog"
-    - "python -c 'from danube_delta.config.development import *'"
-    - "python -c 'from danube_delta.config.production import *'"
+    - "python -c 'from danube_delta.settings import *'"
     - "python -c 'from danube_delta import plugins'"
+    - "python -c 'from danube_delta.templating import filters'"
 sudo: false
