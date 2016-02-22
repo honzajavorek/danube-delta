@@ -129,7 +129,7 @@ def build(config, production=False, autoreload=False):
     options['autoreload'] = autoreload
 
     if production:
-        options['_env'] = {'PRODUCTION': True}
+        options['_env'] = {'PRODUCTION': '1'}
     else:
         options['debug'] = True
         options['ignore_cache'] = True
