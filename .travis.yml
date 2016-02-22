@@ -7,6 +7,4 @@ script:
     - "flake8 ."
     - "which blog"
     - "python -c 'from danube_delta.settings import *'"
-    - "python -c 'from danube_delta import plugins'"
-    - "python -c 'from danube_delta.templating import filters'"
 sudo: false
