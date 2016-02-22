@@ -18,8 +18,6 @@ if sys.argv[-1] == 'publish':
     version_label = 'v{}'.format(version)
     sh.git.tag(a=version_label, m=version_label)
     sh.git.push('origin', 'master', '--tags')
-    sh.python('setup.py', 'sdist', 'upload')
-    sh.python('setup.py', 'bdist_wheel', 'upload')
     sys.exit()
 
 

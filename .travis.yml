@@ -1,4 +1,4 @@
-language: python
+language: "python"
 python:
     - "3.5"
 install:
@@ -7,4 +7,14 @@ script:
     - "flake8 ."
     - "which blog"
     - "python -c 'from danube_delta.settings import *'"
+deploy:
+    provider: "pypi"
+    user: "honzajavorek"
+    password:
+        secure: "CJxnT5OyRKoIiLqIOOJd1ZaH62rTuvR2LCY+E9DS77hbbhBjDTlugNcjr9yF+nmI0wE0JzgESYL9qrq6xOCPXGOfvaynDLvQpJ81B7wTMW6u+Gf9/Njqvy9EfjrbFswvMpnp9M56AFdMekkmkTL85CCEatoHAOTeElyYNSksMeIjTcKaash1C3LsxkGpRMMSk6ZMuAIKy8+rxXnbz21UEjZzSFfWeO55gec2tyBTmbWTbN457q+KKNr8APiu6/qz2xxz40zBj1UYcgFm9duvt3EgvOr9Urjs2GM2ODmeojLGWp5iK0sipdgKDBJwTBVwakMD5O9LbtB6i6KkzsWSAg3Quarez1ufbukAs4PKCBZX4RRYO+JO0aM8H/vCMz+dvrdg4YpSfdDng1kEUiQN7VLGBGft8XL9xz+QmietdSS+DZYJy1i8nv01+i1NHM3FWJeZxtj58IJnb5TpqOzC8/PCbwZunLg2t/CyhuGd+T6V0cQHeIOi2dEucY1xEwea7BQJTURMIauLY3YyVNRPQoW9/1An8wmaqOXUhY+7M2J/TQtb2dwpoDmQqfgqd6caDEZdm3KA2sPBlC3ORL619IQEFE4JFGvkyjRPZ60uHTGamo2cvjcch04/0aMun+lPseNyNMRmzBKoGSXdoeDJkVEYZvmBewd1gGFz5yhhh7Q="
+    on:
+        tags: true
+        distributions: "sdist bdist_wheel"
+        branch: "master"
+        repo: "honzajavorek/danube-delta"
 sudo: false
