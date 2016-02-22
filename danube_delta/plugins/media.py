@@ -100,13 +100,11 @@ def get_image_info(filename):
         'width': width,
         'height': height,
         'needs_thumbnail': (
-            width > IMG_MAX_SIZE
-            or
+            width > IMG_MAX_SIZE or
             height > IMG_MAX_SIZE
         ),
         'needs_click_to_enlarge': (
-            width > IMG_CLICK_TO_ENLARGE_THRESHOLD
-            or
+            width > IMG_CLICK_TO_ENLARGE_THRESHOLD or
             height > IMG_CLICK_TO_ENLARGE_THRESHOLD
         ),
     }
