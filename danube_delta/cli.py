@@ -77,7 +77,7 @@ def lint(context):
         context.exit(1)
 
 
-@blog.command(help='Looks for errors in source code of your blog')
+@blog.command(help='Saves changes and sends them to GitHub')
 @click.pass_context
 def publish(context):
     raise NotImplementedError

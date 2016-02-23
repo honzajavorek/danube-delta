@@ -6,6 +6,7 @@ Danube Delta
 .. image:: https://travis-ci.org/honzajavorek/danube-delta.svg?branch=master
     :target: https://travis-ci.org/honzajavorek/danube-delta
 
+
 Installation
 ------------
 
@@ -13,12 +14,14 @@ Installation
 
     $ pip install danube-delta
 
+
 **Warning:** The library is only for Python 3.
+
 
 Setup
 -----
 
-#.  Create scaffolding of your `Pelican <http://www.getpelican.com/>`__ blog:
+#.  Create basic scaffolding of your `Pelican <http://www.getpelican.com/>`__ blog:
 
     .. code:: shell
 
@@ -28,9 +31,10 @@ Setup
         $ mkdir ./content ./output
         $ echo '/output' > .gitignore
 
+
 #.  Create ``./settings.py``:
 
-    ..code:: python
+    .. code:: python
 
         from danube_delta.settings import *
 
@@ -40,27 +44,53 @@ Setup
         if PRODUCTION:
             SITEURL = 'http://example.com'
 
+
 #.  Install ``danube_delta``, globally:
 
-    ..code:: shell
+    .. code:: shell
 
         $ sudo -H pip install danube_delta
 
+
 #.  In the root of your blog directory you can now use the ``blog`` CLI:
 
-    ..code:: shell
+    .. code:: shell
 
         $ blog write
-        $ blog deploy
+
 
 Usage
 -----
 
-..code:: shell
+.. code:: shell
 
-    $ blog write      # Starts a new article and opens it in your editor
-    $ blog preview    # Opens preview of the blog in your browser
-    $ blog publish    # Saves changes and sends them to GitHub
+    $ blog write    # Starts a new article and opens it in your editor
+    $ blog preview  # Opens local preview of your blog website in your browser
+    $ blog publish  # Saves changes and sends them to GitHub
+    $ blog deploy   # Uploads new version of your public blog website
+
+
+`Travis CI <https://docs.travis-ci.com/user/deployment/>`__ can do ``blog deploy`` for you every time you perform ``blog publish``:
+
+.. code:: yaml
+
+    language: "python"
+    python:
+        - "3.5"
+    cache: "pip"
+    script:
+        - "blog lint"
+    env:
+      global:
+        - secure: "..."  # gem install travis && travis encrypt GITHUB_TOKEN=...
+    deploy:
+        provider: "script"
+        script: "blog deploy"
+        on:
+            branch: "master"
+            repo: "honzajavorek/my-awesome-blog"
+    sudo: false
+
 
 Developing Danube Delta
 -----------------------
@@ -68,10 +98,11 @@ Developing Danube Delta
 #.  Clone Danube Delta to a directory of your choice, e.g. ``~/danube-delta``.
 #.  Install Danube Delta from your local clone: ``pip install -e ~/danube-delta``.
 
+
 Name
 ----
 
-I've seen some `pelicans <https://en.wikipedia.org/wiki/Pelican>`__ in the `Danube Delta <https://en.wikipedia.org/wiki/Danube_Delta>`__ in 2012:
+In 2012 I've seen some `pelicans <https://en.wikipedia.org/wiki/Pelican>`__ in the `Danube Delta <https://en.wikipedia.org/wiki/Danube_Delta>`__:
 
 .. figure:: danube-delta.jpg
    :alt: Pelicans in the Danube Delta
