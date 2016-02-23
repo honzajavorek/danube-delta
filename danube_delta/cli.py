@@ -16,13 +16,16 @@ from pelican.settings import DEFAULT_CONFIG
 @click.pass_context
 def blog(context):
     cwd = os.getcwd()
-    settings_path = 'settings.py'
 
-    BLOG_CONFIG = load_settings_file_as_dict(os.path.join(cwd, settings_path))
+    settings_path = 'settings.py'
+    settings_file = os.path.join(cwd, settings_path)
 
     config = {'CWD': cwd, 'SETTINGS_PATH': settings_path}
     config.update(DEFAULT_CONFIG)
-    config.update(BLOG_CONFIG)
+    config.update(load_settings_file_as_dict(settings_file))
+
+    config['CONTENT_DIR'] = os.path.join(cwd, config['PATH'])
+    config['OUTPUT_DIR'] = os.path.join(cwd, config['OUTPUT_PATH'])
 
     context.obj = config
 
@@ -32,7 +35,6 @@ def blog(context):
 @click.pass_context
 def write(context, open):
     config = context.obj
-    content_dir = os.path.join(config['CWD'], config['PATH'])
 
     title = click.prompt('Title')
     author = click.prompt('Author', default=config.get('DEFAULT_AUTHOR'))
@@ -47,8 +49,8 @@ def write(context, open):
     template += 'Text...\n\n'
     file_content = template.format(title, pub_date, author)
 
-    os.makedirs(content_dir, exist_ok=True)
-    path = os.path.join(content_dir, basename)
+    os.makedirs(config['CONTENT_DIR'], exist_ok=True)
+    path = os.path.join(config['CONTENT_DIR'], basename)
     with click.open_file(path, 'w') as f:
         f.write(file_content)
 
@@ -60,19 +62,47 @@ def write(context, open):
 @blog.command(help='Opens local preview of your blog website')
 @click.pass_context
 def preview(context):
-    raise NotImplementedError
+    config = context.obj
+    state = {'ready': False}
 
-    # config = context.obj
-    #
-    # click.echo('Generating HTML...')
-    # build(config, autoreload=True)
+    def open_browser(line):
+        if not state['ready'] and line.startswith('Done: Processed'):
+            state['ready'] = True
+            click.launch('http://localhost:8000')
+        return line
+
+    server = None
+    pelican = None
+
+    os.chdir(config['OUTPUT_DIR'])
+    try:
+        server = sh.python(
+            '-m', 'http.server', '8000',
+            _bg=True,
+        )
+        pelican = sh.pelican(
+            config['CONTENT_DIR'],
+            output=config['OUTPUT_DIR'],
+            settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
+            autoreload=True, debug=True, ignore_cache=True,
+            _bg=True, **redirect_output(open_browser)
+        )
+        server.wait()
+        pelican.wait()
+
+    except:
+        if server is not None:
+            server.process.kill()
+        if pelican is not None:
+            pelican.process.kill()
+        raise
 
 
 @blog.command(help='Looks for errors in source code of your blog')
 @click.pass_context
 def lint(context):
     try:
-        sh.flake8('.', exclude='env', **redirect_output)
+        sh.flake8('.', exclude='env', **redirect_output())
     except sh.ErrorReturnCode:
         context.exit(1)
 
@@ -87,10 +117,15 @@ def publish(context):
 @click.pass_context
 def deploy(context):
     config = context.obj
-    output_dir = os.path.join(config['CWD'], config['OUTPUT_PATH'])
 
     click.echo('Generating HTML...')
-    build(config, production=True)
+    sh.pelican(
+        config['CONTENT_DIR'],
+        output=config['OUTPUT_DIR'],
+        settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
+        _env={'PRODUCTION': '1'},
+        **redirect_output()
+    )
 
     click.echo('Removing unnecessary output...')
     unnecessary_paths = [
@@ -98,7 +133,7 @@ def deploy(context):
         'authors.html', 'categories.html',
     ]
     for path in unnecessary_paths:
-        remove_path(os.path.join(output_dir, path))
+        remove_path(os.path.join(config['OUTPUT_DIR'], path))
 
     if os.environ.get('TRAVIS'):  # Travis CI
         click.echo('Setting up Git...')
@@ -112,7 +147,7 @@ def deploy(context):
 
     click.echo('Rewriting gh-pages branch...')
     commit_message = 'Published :notebook_with_decorative_cover:'
-    sh.ghp_import('-m', commit_message, output_dir)
+    sh.ghp_import('-m', commit_message, config['OUTPUT_DIR'])
 
     click.echo('Pushing to GitHub...')
     sh.git.push('origin', 'gh-pages', force=True)
@@ -132,24 +167,6 @@ def load_settings_file_as_dict(filename):
     return config
 
 
-def build(config, production=False, autoreload=False):
-    options = redirect_output.copy()
-    options['autoreload'] = autoreload
-
-    if production:
-        options['_env'] = {'PRODUCTION': '1'}
-    else:
-        options['debug'] = True
-        options['ignore_cache'] = True
-
-    sh.pelican(
-        os.path.join(config['CWD'], config['PATH']),
-        output=os.path.join(config['CWD'], config['OUTPUT_PATH']),
-        settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
-        **options
-    )
-
-
 def remove_path(path):
     if os.path.isfile(path):
         os.remove(path)
@@ -157,12 +174,15 @@ def remove_path(path):
         shutil.rmtree(path, ignore_errors=True)
 
 
-def redirect_stdout(line, stdin, process):
-    sys.stdout.write(line)
+def redirect_output(filter_fn):
+    def redirect_stdout(line, stdin, process):
+        if filter_fn:
+            line = filter_fn(line)
+        sys.stdout.write(line)
 
+    def redirect_stderr(line, stdin, process):
+        if filter_fn:
+            line = filter_fn(line)
+        sys.stderr.write(line)
 
-def redirect_stderr(line, stdin, process):
-    sys.stderr.write(line)
-
-
-redirect_output = {'_out': redirect_stdout, '_err': redirect_stderr}
+    return {'_out': redirect_stdout, '_err': redirect_stderr}
