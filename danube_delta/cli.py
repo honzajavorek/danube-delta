@@ -27,13 +27,45 @@ def blog(context):
     context.obj = config
 
 
-@blog.command(help='Runs development server')
+@blog.command(help='Starts a new article')
+@click.option('--open/--no-open', default=True, help='Open in editor')
 @click.pass_context
-def develop(context):
+def write(context, open):
     config = context.obj
+    content_dir = os.path.join(config['CWD'], config['PATH'])
 
-    click.echo('Generating HTML...')
-    build(config, autoreload=True)
+    title = click.prompt('Title')
+    author = click.prompt('Author', default=config.get('DEFAULT_AUTHOR'))
+
+    slug = slugify(title)
+    pub_date = datetime.now() + timedelta(hours=2)
+    basename = '{:%Y-%m-%d}_{}.md'.format(pub_date, slug)
+
+    template = 'Title: {}\nDate: {:%Y-%m-%d %H:%M:%S}\nAuthor: {}\n\n\n'
+    template += 'Text...\n\n'
+    template += '![image description]({{filename}}/images/your-photo.jpg)\n\n'
+    template += 'Text...\n\n'
+    file_content = template.format(title, pub_date, author)
+
+    os.makedirs(content_dir, exist_ok=True)
+    path = os.path.join(content_dir, basename)
+    with click.open_file(path, 'w') as f:
+        f.write(file_content)
+
+    click.echo(path)
+    if open:
+        click.launch(path)
+
+
+@blog.command(help='Opens local preview of your blog website')
+@click.pass_context
+def preview(context):
+    raise NotImplementedError
+
+    # config = context.obj
+    #
+    # click.echo('Generating HTML...')
+    # build(config, autoreload=True)
 
 
 @blog.command(help='Looks for errors in source code of your blog')
@@ -45,7 +77,13 @@ def lint(context):
         context.exit(1)
 
 
-@blog.command(help='Generates HTML and pushes your new gh-pages to GitHub')
+@blog.command(help='Looks for errors in source code of your blog')
+@click.pass_context
+def publish(context):
+    raise NotImplementedError
+
+
+@blog.command(help='Uploads new version of your public blog website')
 @click.pass_context
 def deploy(context):
     config = context.obj
@@ -80,36 +118,6 @@ def deploy(context):
     sh.git.push('origin', 'gh-pages', force=True)
 
     click.echo('Done!')
-
-
-@blog.command(help='Creates new article and opens it in your editor')
-@click.option('--open/--no-open', default=True, help='Open in editor')
-@click.pass_context
-def article(context, open):
-    config = context.obj
-    content_dir = os.path.join(config['CWD'], config['PATH'])
-
-    title = click.prompt('Title')
-    author = click.prompt('Author', default=config.get('DEFAULT_AUTHOR'))
-
-    slug = slugify(title)
-    pub_date = datetime.now() + timedelta(hours=2)
-    basename = '{:%Y-%m-%d}_{}.md'.format(pub_date, slug)
-
-    template = 'Title: {}\nDate: {:%Y-%m-%d %H:%M:%S}\nAuthor: {}\n\n\n'
-    template += 'Text...\n\n'
-    template += '![image description]({{filename}}/images/your-photo.jpg)\n\n'
-    template += 'Text...\n\n'
-    file_content = template.format(title, pub_date, author)
-
-    os.makedirs(content_dir, exist_ok=True)
-    path = os.path.join(content_dir, basename)
-    with click.open_file(path, 'w') as f:
-        f.write(file_content)
-
-    click.echo(path)
-    if open:
-        click.launch(path)
 
 
 def load_settings_file_as_dict(filename):
