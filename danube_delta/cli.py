@@ -1,14 +1,33 @@
 
 import os
+import re
 import sys
+import random
 import shutil
 import importlib.util
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import sh
 import click
 from slugify import slugify
 from pelican.settings import DEFAULT_CONFIG
+
+
+COMMIT_EMOJIS = [
+    ':closed_book:',
+    ':green_book:',
+    ':blue_book:',
+    ':orange_book:',
+    ':notebook:',
+    ':notebook_with_decorative_cover:',
+    ':ledger:',
+    ':books:',
+    ':pencil2:',
+    ':black_nib:',
+    ':book:',
+    ':memo:',
+    ':pencil:',
+]
 
 
 @click.group()
@@ -40,14 +59,22 @@ def write(context, open):
     author = click.prompt('Author', default=config.get('DEFAULT_AUTHOR'))
 
     slug = slugify(title)
-    pub_date = datetime.now() + timedelta(hours=2)
-    basename = '{:%Y-%m-%d}_{}.md'.format(pub_date, slug)
+    creation_date = datetime.now()
+    basename = '{:%Y-%m-%d}_{}.md'.format(creation_date, slug)
+    meta = (
+        ('Title', title),
+        ('Date', '{:%Y-%m-%d %H:%M}:00'.format(creation_date)),
+        ('Modified', '{:%Y-%m-%d %H:%M}:00'.format(creation_date)),
+        ('Author', author),
+    )
 
-    template = 'Title: {}\nDate: {:%Y-%m-%d %H:%M:%S}\nAuthor: {}\n\n\n'
-    template += 'Text...\n\n'
-    template += '![image description]({{filename}}/images/your-photo.jpg)\n\n'
-    template += 'Text...\n\n'
-    file_content = template.format(title, pub_date, author)
+    file_content = ''
+    for key, value in meta:
+        file_content += '{}: {}\n'.format(key, value)
+    file_content += '\n\n'
+    file_content += 'Text...\n\n'
+    file_content += '![image description]({filename}/images/my-photo.jpg)\n\n'
+    file_content += 'Text...\n\n'
 
     os.makedirs(config['CONTENT_DIR'], exist_ok=True)
     path = os.path.join(config['CONTENT_DIR'], basename)
@@ -110,7 +137,43 @@ def lint(context):
 @blog.command(help='Saves changes and sends them to GitHub')
 @click.pass_context
 def publish(context):
-    raise NotImplementedError
+    content_changes = []
+    other_changes = []
+
+    content_re = re.compile(r'^content/')
+    for path in get_changes():
+        if content_re.match(path):
+            content_changes.append(path)
+        else:
+            other_changes.append(path)
+
+    if content_changes:
+        click.echo('Changes to be published:\n')
+        for path in content_changes:
+            click.echo(' · {}'.format(click.style(path, fg='yellow')))
+
+        if other_changes:
+            click.echo('\nSome changes not related to content of the blog:\n')
+            for path in other_changes:
+                click.echo(' · {}'.format(click.style(path, fg='blue')))
+            click.echo('\nYou will have to save those manually.')
+
+        if not click.confirm('\nContinue publishing'):
+            click.echo('Aborted!')
+            context.exit(1)
+
+        for path in content_changes:
+            if os.path.isfile(path) and os.path.splitext(path)[1] == '.md':
+                click.echo('Updating modification date: {}'.format(path))
+                update_modified(path)
+
+        sh.git.add('content', A=True)
+        sh.git.commit(m='Publishing {}'.format(random.choice(COMMIT_EMOJIS)))
+    else:
+        click.echo('No changes.')
+
+    click.echo('Pushing to GitHub...')
+    sh.git.push('origin', 'master', **redirect_output())
 
 
 @blog.command(help='Uploads new version of your public blog website')
@@ -146,7 +209,7 @@ def deploy(context):
         sh.git.remote('set-url', 'origin', origin)
 
     click.echo('Rewriting gh-pages branch...')
-    commit_message = 'Published :notebook_with_decorative_cover:'
+    commit_message = 'Deploying {}'.format(random.choice(COMMIT_EMOJIS))
     sh.ghp_import('-m', commit_message, config['OUTPUT_DIR'])
 
     click.echo('Pushing to GitHub...')
@@ -174,7 +237,36 @@ def remove_path(path):
         shutil.rmtree(path, ignore_errors=True)
 
 
-def redirect_output(filter_fn):
+def update_modified(filename):
+    modification_date = datetime.now()
+    with click.open_file(filename) as f:
+        article_src = f.read()
+    article_src = re.sub(
+        r'Modified: (.+)',
+        'Modified: {:%Y-%m-%d %H:%M}:00'.format(modification_date),
+        article_src,
+    )
+    with click.open_file(filename, 'w') as f:
+        f.write(article_src)
+
+
+def get_changes():
+    for line in sh.git('status', porcelain=True):
+        match = re.match(r'\s*\S+ (.+)', str(line))
+        path = match.group(1)
+
+        if os.path.isdir(path):
+            for root_path, dir_paths, file_paths in os.walk(path):
+                yield root_path
+                for dir_path in dir_paths:
+                    yield os.path.join(root_path, dir_path)
+                for file_path in file_paths:
+                    yield os.path.join(root_path, file_path)
+        else:
+            yield path
+
+
+def redirect_output(filter_fn=None):
     def redirect_stdout(line, stdin, process):
         if filter_fn:
             line = filter_fn(line)

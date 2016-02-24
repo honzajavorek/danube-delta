@@ -5,7 +5,7 @@ from codecs import open
 from setuptools import setup, find_packages
 
 
-version = '0.0.3'
+version = '0.0.4'
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -41,6 +41,7 @@ setup(
         'sh',
         'flake8',
         'markdown',
+        'colorama',
     ],
     entry_points={
         'console_scripts': [
