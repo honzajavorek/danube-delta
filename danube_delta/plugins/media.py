@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 IMG_MAX_SIZE = 1024
 IMG_CLICK_TO_ENLARGE_THRESHOLD = 700
 
-THUMBNAILS_DIR = 'thumbnails'
+THUMBNAILS_PATH = 'thumbnails'
 THUMBNAIL_SAVE_OPTIONS = {
     'quality': 100,
     'optimize': True,
@@ -119,7 +119,7 @@ def get_image_src(filename):
 
 
 def create_thumbnail(filename):
-    tn_dir = os.path.join(os.path.dirname(filename), THUMBNAILS_DIR)
+    tn_dir = os.path.join(os.path.dirname(filename), THUMBNAILS_PATH)
     tn_filename = os.path.join(tn_dir, os.path.basename(filename))
 
     if not os.path.isfile(tn_filename):
