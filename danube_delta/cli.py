@@ -4,15 +4,17 @@ import re
 import sys
 import random
 import shutil
+import requests
+import contextlib
 from glob import glob
 import importlib.util
 from datetime import datetime
 
-import sh
 import click
 from slugify import slugify
 from PIL import Image, ImageFilter
 from pelican.settings import DEFAULT_CONFIG
+from sh import git, ghp_import, pelican, python, ErrorReturnCode, flake8
 
 
 IMAGE_MAX_SIZE = 1900
@@ -156,30 +158,30 @@ def preview(context):
             click.launch('http://localhost:8000')
         return line
 
-    server = None
-    pelican = None
+    server_cmd = None
+    pelican_cmd = None
 
     os.chdir(config['OUTPUT_DIR'])
     try:
-        server = sh.python(
+        server_cmd = python(
             '-m', 'http.server', '8000',
             _bg=True,
         )
-        pelican = sh.pelican(
+        pelican_cmd = pelican(
             config['CONTENT_DIR'],
             output=config['OUTPUT_DIR'],
             settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
             autoreload=True, debug=True, ignore_cache=True,
             _bg=True, **redirect_output(open_browser)
         )
-        server.wait()
-        pelican.wait()
+        server_cmd.wait()
+        pelican_cmd.wait()
 
     except:
-        if server is not None:
-            server.process.kill()
-        if pelican is not None:
-            pelican.process.kill()
+        if server_cmd is not None:
+            server_cmd.process.kill()
+        if pelican_cmd is not None:
+            pelican_cmd.process.kill()
         raise
 
 
@@ -187,14 +189,18 @@ def preview(context):
 @click.pass_context
 def lint(context):
     try:
-        sh.flake8('.', exclude='env', **redirect_output())
-    except sh.ErrorReturnCode:
+        flake8('.', exclude='env', **redirect_output())
+    except ErrorReturnCode:
         context.exit(1)
 
 
 @blog.command(help='Saves changes and sends them to GitHub')
 @click.pass_context
 def publish(context):
+    if get_branch() != 'master':
+        click.echo("Your current Git branch is '{}' instead of master.".format(current_branch))
+        context.exit(1)
+
     content_changes = []
     other_changes = []
 
@@ -211,7 +217,8 @@ def publish(context):
             click.secho(path, fg='yellow')
 
         if other_changes:
-            click.echo('\nSome changes not related to content of the blog:\n')
+            click.echo('\nSome changes are not related to content '
+                       'of the blog:\n')
             for path in other_changes:
                 click.secho(path, fg='blue')
             click.echo('\nYou will have to save those manually.')
@@ -225,13 +232,22 @@ def publish(context):
                 click.echo('Updating modification date: {}'.format(path))
                 update_modified(path)
 
-        sh.git.add('content', A=True)
-        sh.git.commit(m='Publishing {}'.format(random.choice(COMMIT_EMOJIS)))
+        git.add('content', A=True)
+        git.commit(m='Publishing {}'.format(random.choice(COMMIT_EMOJIS)))
     else:
         click.echo('No changes.')
 
     click.echo('Pushing to GitHub...')
-    sh.git.push('origin', 'master', **redirect_output())
+    git.push('origin', 'master', **redirect_output())
+
+    pr_link = get_pr_link()
+    if pr_link:
+        click.launch(pr_link)
+
+
+@blog.command(help="Updates your blog with other people's changes from GitHub")
+def update():
+    git.pull('origin', 'master', **redirect_output())
 
 
 @blog.command(help='Uploads new version of your public blog website')
@@ -240,7 +256,7 @@ def deploy(context):
     config = context.obj
 
     click.echo('Generating HTML...')
-    sh.pelican(
+    pelican(
         config['CONTENT_DIR'],
         output=config['OUTPUT_DIR'],
         settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
@@ -258,22 +274,20 @@ def deploy(context):
 
     if os.environ.get('TRAVIS'):  # Travis CI
         click.echo('Setting up Git...')
-        sh.git.config('user.name', sh.git('show', format='%cN', s=True))
-        sh.git.config('user.email', sh.git('show', format='%cE', s=True))
+        git.config('user.name', git('show', format='%cN', s=True))
+        git.config('user.email', git('show', format='%cE', s=True))
 
         github_token = os.environ.get('GITHUB_TOKEN')
         repo_slug = os.environ.get('TRAVIS_REPO_SLUG')
         origin = 'https://{}@github.com/{}.git'.format(github_token, repo_slug)
-        sh.git.remote('set-url', 'origin', origin)
+        git.remote('set-url', 'origin', origin)
 
     click.echo('Rewriting gh-pages branch...')
     commit_message = 'Deploying {}'.format(random.choice(COMMIT_EMOJIS))
-    sh.ghp_import('-m', commit_message, config['OUTPUT_DIR'])
+    ghp_import('-m', commit_message, config['OUTPUT_DIR'])
 
     click.echo('Pushing to GitHub...')
-    sh.git.push('origin', 'gh-pages', force=True)
-
-    click.echo('Done!')
+    git.push('origin', 'gh-pages', force=True)
 
 
 def load_settings_file_as_dict(filename):
@@ -309,10 +323,36 @@ def update_modified(filename):
 
 
 def get_changes():
-    for line in sh.git('status', porcelain=True):
+    for line in git('status', porcelain=True):
         match = re.match(r'\s*\S+ (.+)', str(line))
         path = match.group(1)
         yield from find_files(path)
+
+
+def get_pr_link():
+    repo_slug = get_repo_slug()
+    repo_url = 'https://api.github.com/repos/{}'.format(repo_slug)
+
+    res = requests.get(repo_url)
+    res.raise_for_status()
+    repo_info = res.json()
+
+    if not repo_info['fork']:
+        return None
+
+    return 'https://github.com/{}/compare/master...{}:master'.format(
+        repo_info['parent']['full_name'],
+        repo_info['owner']['login']
+    )
+
+
+def get_repo_slug():
+    url = str(git.remote('get-url', 'origin'))
+    return re.search(r'github\.com[\:\/](.+)\.git$', url).group(1)
+
+
+def get_branch():
+    return re.search(r'\*\s+(\S+)', str(git.branch(no_color=True))).group(1)
 
 
 def find_files(path):

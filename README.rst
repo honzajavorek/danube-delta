@@ -64,6 +64,7 @@ Usage
 
 .. code:: shell
 
+    $ blog update   # Updates your blog with other people's changes from GitHub
     $ blog write    # Starts a new article and opens it in your editor
     $ blog preview  # Opens local preview of your blog website in your browser
     $ blog publish  # Saves changes and sends them to GitHub
