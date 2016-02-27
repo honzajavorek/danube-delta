@@ -64,12 +64,13 @@ Usage
 
 .. code:: shell
 
-    $ blog update   # Updates your blog with other people's changes from GitHub
-    $ blog write    # Starts a new article and opens it in your editor
-    $ blog preview  # Opens local preview of your blog website in your browser
+    $ blog update   # Gets other people's changes from GitHub
+    $ blog write    # Starts a new article
+    $ blog photos   # Adds images to the last article
+    $ blog preview  # Opens local preview of your blog website
     $ blog publish  # Saves changes and sends them to GitHub
-    $ blog deploy   # Uploads new version of your public blog website
-
+    $ blog lint     # Looks for errors in source code of your blog
+    $ blog deploy   # Uploads new version of the blog website
 
 `Travis CI <https://docs.travis-ci.com/user/deployment/>`__ can do ``blog deploy`` for you every time you perform ``blog publish``:
 
