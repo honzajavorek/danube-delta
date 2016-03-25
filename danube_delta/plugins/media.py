@@ -28,21 +28,28 @@ def register():
     signals.content_object_init.connect(process_media)
 
 
-def process_media(article):
-    if not article.source_path.endswith('.md'):
+def process_media(content):
+    if not content.source_path.endswith('.md'):
         return
 
-    with modify_html(article) as html_tree:
-        content_dir = article.settings['PATH']
+    with modify_html(content) as html_tree:
+        content_dir = content.settings['PATH']
 
-        for iframe in html_tree.findall('.//iframe'):
+        for iframe in html_tree.xpath('//iframe'):
             iframe_to_figure(iframe)
-        for object in html_tree.findall('.//object'):
+
+        for object in html_tree.xpath('//object'):
             object_to_figure(object)
-        for img in html_tree.findall('.//p/img'):
+
+        for blockquote in html_tree.xpath('//blockquote'):
+            tweet_to_figure(blockquote)
+
+        for img in html_tree.xpath('//p[count(img) = 1]/img'):
             img_to_figure(img, content_dir)
-        for img in html_tree.findall('.//img'):
+
+        for img in html_tree.xpath('//img'):
             create_img_thumbnail(img, content_dir)
+            update_img_classes(img)
 
 
 def iframe_to_figure(iframe):
@@ -54,22 +61,50 @@ def object_to_figure(object):
 
 
 def img_to_figure(img, content_dir):
-    parent = img.getparent()
-    if parent.tag in ('p', 'div'):
-        parent.tag = 'figure'
-    else:
-        parent = wrap_element(img, etree.Element('figure'))
+    if 'left' in img.classes or 'right' in img.classes:
+        return
 
-    img_src = img.get('src')
-    if not img_src.startswith('http'):
-        filename = get_image_filename(content_dir, img_src)
-        width = get_image_info(filename)['width']
-        if width > IMG_MAX_SIZE:
-            width = IMG_MAX_SIZE
+    figure = img.getparent()
+    figure.tag = 'figure'
+    figure.classes.add('figure')
+    img.classes.update(['figure-img', 'img-fluid'])
 
-        style = 'width: {}px'.format(width)
-        img.set('style', style)
-        parent.set('style', style)
+    create_figcaption(img, figure)
+
+
+def tweet_to_figure(blockquote):
+    if 'twitter-tweet' not in blockquote.classes:
+        return
+
+    wrap_element(blockquote, etree.Element('figure'))
+
+
+def create_figcaption(img, figure):
+    figcaption = etree.Element('figcaption')
+    create = False
+
+    if img.tail:
+        create = True
+        figcaption.text = img.tail
+        img.tail = ''
+
+    for sibling in img.itersiblings():
+        create = True
+        figcaption.append(sibling)
+
+    if not create:
+        return
+
+    figcaption.set('class', 'figure-caption')
+    figure.append(figcaption)
+
+
+def update_img_classes(img):
+    if 'right' in img.classes:
+        img.classes.add('pull-xs-right')
+    if 'left' in img.classes:
+        img.classes.add('pull-xs-left')
+    img.classes.update(['img-fluid', 'img-rounded'])
 
 
 def create_img_thumbnail(img, content_dir):

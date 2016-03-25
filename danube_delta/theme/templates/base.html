@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="{{ DEFAULT_LANG }}">
+    <head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <title>{% block title %}{{ SITENAME }}{% endblock title %}</title>
+
+        {% if PRODUCTION %}
+            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css">
+            <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        {% else %}
+            <link rel="stylesheet" href="{{ SITEURL }}/theme/css/bootstrap.min.css">
+            <link rel="stylesheet" href="{{ SITEURL }}/theme/css/font-awesome.min.css">
+        {% endif %}
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Enriqueta:400,700&amp;subset=latin,latin-ext">
+        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Slabo+13px&amp;subset=latin,latin-ext">
+
+        <link rel="stylesheet" href="{{ SITEURL }}/theme/css/code.css">
+        <link rel="stylesheet" href="{{ SITEURL }}/theme/css/main.css">
+
+        {% block feeds %}
+            <link rel="alternate" type="application/rss+xml" title="{{ SITENAME }} - všechny články" href="{{ SITEURL }}/{{ FEED_ALL_ATOM }}">
+            {% if DISQUS_SITENAME %}
+                <link rel="alternate" type="application/rss+xml" title="{{ SITENAME }} - všechny komentáře" href="http://{{ DISQUS_SITENAME }}.disqus.com/latest.rss">
+            {% endif %}
+        {% endblock feeds %}
+
+        <link rel="shortcut icon" type="image/x-icon" href="{{ SITEURL }}/favicon.ico">
+
+        {% block fb %}
+            <!-- TODO
+            + twitter?
+            <meta property="og:description" content="Blog Honzy Javorka.">
+            <meta property="og:image" content="{{ SITEURL }}/theme/images/logo.png">
+            -->
+        {% endblock fb %}
+    {% endblock %}
+    </head>
+    <body>
+        <div class="container {% block class %}{% endblock %}">
+            {% block container %}{% endblock %}
+
+            {% block feed %}
+                <hr>
+
+                <div id="feeds" class="feeds">
+                    <a href="{{ SITEURL }}/{{ FEED_ATOM }}" class="btn btn-primary-outline">
+                        <i class="fa fa-feed"></i> Články
+                    </a>
+                    {% if DISQUS_SITENAME %}
+                        <a href="http://{{ DISQUS_SITENAME }}.disqus.com/latest.rss" class="btn btn-primary-outline">
+                            <i class="fa fa-feed"></i> Všechny komentáře
+                        </a>
+                    {% endif %}
+                </div>
+            {% endblock %}
+        </div>
+
+        <hr>
+
+        <div class="footer">
+            <p>{{ articles|copyright }} <a href="{{ SITEURL }}">{{ AUTHOR }}</a></p>
+        </div>
+
+        <script async src="//platform.twitter.com/widgets.js"></script>
+        {% if PRODUCTION and GOOGLE_ANALYTICS %}
+            <script>
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', {{ GOOGLE_ANALYTICS|tojson|safe }}]);
+                _gaq.push(['_trackPageview']);
+
+                (function() {
+                    var ga = document.createElement('script'); ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+        {% endif %}
+    </body>
+</html>

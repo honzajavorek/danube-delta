@@ -1,5 +1,11 @@
 
-from . import code_blocks, heading_permalinks, media
+from . import (
+    code_blocks, headings, plain_summary, featured_image, media, tables,
+    authors
+)
 
 
-PLUGINS = [code_blocks, heading_permalinks, media]
+PLUGINS = [
+    code_blocks, headings, plain_summary, featured_image, media, tables,
+    authors
+]

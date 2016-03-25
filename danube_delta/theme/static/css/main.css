@@ -1,0 +1,319 @@
+
+figure {
+  width: 100%;
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+figure > a {
+  display: inline-block;
+  max-width: 100%;
+}
+
+iframe,
+object,
+figure > img,
+figure > a {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 1000px) {
+    .container {
+      max-width: 940px;
+    }
+}
+
+body {
+  font-family: 'Slabo 13px', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  color: #404040;
+  border-top: #242424 0.5rem solid;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Enriqueta', serif;
+  font-weight: bold;
+  color: #242424;
+}
+
+a {
+  color: #90AA3C;
+}
+
+a:hover,
+a:active,
+a:focus,
+a:active:hover {
+    color: #81992C;
+}
+
+hr {
+    border-color: transparent;
+    margin: 5rem 0;
+}
+
+.index .site-header {
+    text-align: center;
+    margin: 6rem 0 10rem 0;
+}
+
+.index .site-header-title {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 4rem;
+}
+
+.article .site-header {
+    margin: 1rem 0;
+    text-align: right;
+}
+
+.article .site-header-title {
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+.archive-navigation {
+  text-align: center;
+  margin: 3rem 0 5rem 0;
+}
+
+.archive-index {
+  -webkit-columns: 3 15em;
+  -moz-columns: 3 15em;
+  columns: 3 15em;
+  -webkit-column-gap: 1em;
+  -moz-column-gap: 1em;
+  column-gap: 1em;
+}
+
+.archive-index,
+.archive-index ul,
+.archive-index li {
+  padding: 0;
+  list-style-type: none;
+}
+
+.archive-year h3 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.archive-year {
+  margin-bottom: 2rem;
+}
+
+.archive-year h4 {
+  margin: 1.7rem 0 0.5rem 0;
+  text-align: left;
+}
+
+.archive-article {
+  display: table;
+}
+
+.archive-article time {
+  display: table-cell;
+  width: 3rem;
+}
+
+.archive-article a {
+  display: table-cell;
+}
+
+.latest-article {
+  position: relative;
+}
+
+.latest-article-content {
+  height: 20rem;
+  overflow: hidden;
+}
+
+.latest-article-content .latest-article-title {
+  margin: 0 0 2rem 0;
+  line-height: normal;
+}
+
+.img-featured {
+  max-width: 30%;
+}
+
+.continue-overlay {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 20rem;
+  background: transparent linear-gradient(to bottom, rgba(255, 255, 255, 0), #FFF) repeat scroll 0% 0%;
+}
+
+.continue-overlay,
+.continue-overlay:hover,
+.continue-overlay:active,
+.continue-overlay:focus,
+.continue-overlay:active:hover {
+  text-decoration: none;
+}
+
+.continue .btn {
+  align-self: flex-end;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:active:hover {
+    background-color: #242424;
+    border-color: #242424;
+}
+
+.footer {
+  text-align: center;
+  background-color: #242424;
+  padding: 4rem 0 1rem 0;
+}
+
+.footer,
+.footer a,
+.footer a:hover,
+.footer a:active,
+.footer a:focus,
+.footer a:active:hover {
+  color: #FFF;
+}
+
+.footer .separator {
+    margin: 0 0.5em;
+}
+
+.feeds {
+  text-align: center;
+}
+
+.feeds .btn {
+  margin: 0 0.5rem;
+}
+
+.feeds .btn-primary-outline {
+    color: #242424;
+    border-color: #242424;
+}
+
+.feeds .btn-primary-outline:hover,
+.feeds .btn-primary-outline:active,
+.feeds .btn-primary-outline:focus,
+.feeds .btn-primary-outline:active:hover {
+    color: #FFF;
+    background-color: #242424;
+    border-color: #242424;
+}
+
+.article-header {
+  text-align: center;
+  margin: 6rem 0 10rem 0;
+}
+
+.article-header h1 {
+  font-size: 4rem;
+  font-weight: normal;
+  margin-bottom: 3rem;
+  padding: 0 1em;
+}
+
+.article-content {
+  line-height: 2em;
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4 {
+  margin-top: 1.5em;
+  line-height: 3em;
+}
+
+.article-content a:visited {
+  color: #999;
+}
+
+.article-content img.left {
+  margin: 0 2em 2em 0;
+}
+
+.article-content img.right {
+  margin: 0 0 2em 2em;
+}
+
+.article-content .poem {
+  text-align: center;
+}
+
+.supressed {
+  text-align: center;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.supressed,
+.supressed * {
+  color: #AAA;
+  font-weight: normal;
+  letter-spacing: 0.1rem;
+}
+
+.supressed a:hover,
+.supressed a:active,
+.supressed a:focus,
+.supressed a:active:hover {
+  color: #5B5B5B;
+}
+
+.permalink {
+  margin: 0 0.2em;
+}
+
+.permalink a {
+  color: #999;
+}
+
+.share {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share a {
+  margin: 0 0.5rem;
+}
+
+.about {
+  line-height: 2em;
+  text-align: center;
+}
+
+i.fa {
+  margin-right: 0.3rem;
+}
+
+pre {
+  line-height: 120%;
+  margin: 1em 0; padding: 1em;
+  overflow: auto;
+}

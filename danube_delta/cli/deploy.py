@@ -28,7 +28,7 @@ def deploy(context):
     click.echo('Removing unnecessary output...')
     unnecessary_paths = [
         'author', 'category', 'drafts', 'tag', 'feeds', 'tags.html',
-        'authors.html', 'categories.html',
+        'authors.html', 'categories.html', 'archives.html',
     ]
     for path in unnecessary_paths:
         remove_path(os.path.join(config['OUTPUT_DIR'], path))
@@ -48,7 +48,7 @@ def deploy(context):
     ghp_import('-m', commit_message, config['OUTPUT_DIR'])
 
     click.echo('Pushing to GitHub...')
-    git.push('origin', 'gh-pages', force=True)
+    git.push('origin', 'gh-pages:gh-pages', force=True)
 
 
 def remove_path(path):

@@ -14,8 +14,7 @@ DEFAULT_DATE_FORMAT = '%x'
 
 # Blog settings
 PATH = 'content'
-DEFAULT_PAGINATION = 5
-SUMMARY_MAX_LENGTH = 80
+DEFAULT_PAGINATION = False
 DEFAULT_CATEGORY = 'blog'
 MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'headerid', 'extra']
 
@@ -63,12 +62,12 @@ from .plugins import PLUGINS  # NOQA
 
 
 # Theming
+THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'theme')
+
 from .jinja_filters import JINJA_FILTERS  # NOQA
 THEME_STATIC_PATHS = ['static']
 
-MENUITEMS = []
-LINKS = []
-SOCIAL = []
+SUMMARY_MAX_LENGTH = 500
 
 
 # Development

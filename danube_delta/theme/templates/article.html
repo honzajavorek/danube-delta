@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+
+{% block feeds %}
+    {{ super() }}
+    {% if DISQUS_SITENAME %}
+        <link rel="alternate" type="application/rss+xml" title="{{ SITENAME }} – komentáře ke článku {{ article.title }}" href="http://{{ DISQUS_SITENAME }}.disqus.com/{{ article.slug|replace('-', '_') }}/latest.rss">
+    {% endif %}
+{% endblock %}
+
+
+{% block class %}article{% endblock %}
+
+
+{% block title %}{{ article.title }} - {{ SITENAME }}{% endblock %}
+
+
+{% block container %}
+<div class="site-header">
+    <a href="{{ SITEURL }}" class="site-header-title">
+        <i class="fa fa-bars"></i> {{ SITENAME }}
+    </a>
+</div>
+
+<div class="article-container">
+    <div class="article-header">
+        <h1>{{ article.title|prevent_line_breaks }}</h1>
+        <p class="supressed">
+            <time datetime="{{ article.date.isoformat() }}" pubdate>{{ article.locale_date }}</time>
+            <br>
+            <a href="#about">{{ article.authors|join(',') }}</a>
+        </p>
+    </div>
+
+    <div class="article-content">
+        {{ article.content }}
+    </div>
+
+    {% if article.about %}
+        <hr>
+
+        <div id="about" class="about">
+            <h2 class="supressed">{{ article.authors|join(',') }}</h2>
+            {{ article.about|markdown }}
+        </div>
+    {% endif %}
+
+    <hr>
+
+    <div id="share" class="share">
+        <a href="//www.facebook.com/sharer.php?u={{ (SITEURL + '/' + article.url)|urlencode }}&amp;t={{ (SITENAME + ': ' + article.title)|urlencode }}" target="_blank" class="btn btn-primary-outline">
+            <i class="fa fa-facebook-square"></i> Facebook
+        </a>
+        <a href="//twitter.com/share?url={{ (SITEURL + '/' + article.url)|urlencode }}&amp;text={{ (SITENAME + ': ' + article.title)|urlencode }}" target="_blank" class="btn btn-info-outline">
+            <i class="fa fa-twitter-square"></i> Twitter
+        </a>
+    </div>
+
+    {% if DISQUS_SITENAME %}
+        <hr>
+
+        <div class="article-comments" id="comments">
+            <div id="disqus_thread"></div>
+            <script>
+                var disqus_sitename = {{ DISQUS_SITENAME|tojson|safe }};
+                (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = '//' + disqus_sitename + '.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                })();
+            </script>
+            <noscript>
+                <p class="noscript"><em>Bez JavaScriptu se nezobrazí komentáře.</em></p>
+            </noscript>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+{% block feed %}
+    {% if DISQUS_SITENAME %}
+        <hr>
+
+        <div id="feeds" class="feeds">
+            <a href="http://{{ DISQUS_SITENAME }}.disqus.com/{{ article.slug|replace('-', '_') }}/latest.rss" class="btn btn-primary-outline">
+                <i class="fa fa-feed"></i> Komentáře
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block fb %}
+    <meta property="og:image" content="{{ article.image }}">
+{% endblock %}
