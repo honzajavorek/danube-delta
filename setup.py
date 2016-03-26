@@ -5,7 +5,7 @@ from codecs import open
 from setuptools import setup, find_packages
 
 
-version = '0.0.14'
+version = '0.0.15'
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -32,6 +32,7 @@ setup(
     author_email='mail@honzajavorek.cz',
     license='MIT',
     packages=find_packages(),
+    include_package_data=True,
     install_requires=[
         'pelican',
         'ghp-import',
