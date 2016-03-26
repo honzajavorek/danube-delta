@@ -84,7 +84,6 @@ from .jinja_filters import JINJA_FILTERS  # NOQA
 THEME_STATIC_PATHS = ['static']
 
 GOOGLE_FONTS = ['Enriqueta', 'Slabo 13px']
-SUMMARY_MAX_LENGTH = 500
 
 
 # Development
