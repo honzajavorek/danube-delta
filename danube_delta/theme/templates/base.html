@@ -15,11 +15,15 @@
             <link rel="stylesheet" href="{{ SITEURL }}/theme/css/bootstrap.min.css">
             <link rel="stylesheet" href="{{ SITEURL }}/theme/css/font-awesome.min.css">
         {% endif %}
-        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Enriqueta:400,700&amp;subset=latin,latin-ext">
-        <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Slabo+13px&amp;subset=latin,latin-ext">
+        {% if GOOGLE_FONTS %}
+            <link rel="stylesheet" href="{{ GOOGLE_FONTS|google_fonts }}">
+        {% endif %}
 
         <link rel="stylesheet" href="{{ SITEURL }}/theme/css/code.css">
         <link rel="stylesheet" href="{{ SITEURL }}/theme/css/main.css">
+        {% if USE_SITE_CSS %}
+            <link rel="stylesheet" href="{{ SITEURL }}/theme/css/site.css">
+        {% endif %}
 
         {% block feeds %}
             <link rel="alternate" type="application/rss+xml" title="{{ SITENAME }} - všechny články" href="{{ SITEURL }}/{{ FEED_ALL_ATOM }}">
@@ -30,13 +34,21 @@
 
         <link rel="shortcut icon" type="image/x-icon" href="{{ SITEURL }}/favicon.ico">
 
-        {% block fb %}
-            <!-- TODO
-            + twitter?
-            <meta property="og:description" content="Blog Honzy Javorka.">
-            <meta property="og:image" content="{{ SITEURL }}/theme/images/logo.png">
-            -->
-        {% endblock fb %}
+        {% block og %}
+            <meta name="twitter:card" content="summary">
+            {% if TWITTER_USERNAME_SITE %}
+                <meta name="twitter:site" content="@{{ TWITTER_USERNAME_SITE }}">
+            {% endif %}
+            {% if TWITTER_USERNAME_AUTHOR %}
+                <meta name="twitter:creator" content="@{{ TWITTER_USERNAME_AUTHOR }}">
+            {% endif %}
+            {% if SITESUBTITLE %}
+                <meta name="og:description" content="{{ SITESUBTITLE }}">
+            {% endif %}
+            {% if ABOUT_IMAGE %}
+                <meta name="og:image" content="{{ SITEURL }}/{{ ABOUT_IMAGE }}">
+            {% endif %}
+        {% endblock og %}
     {% endblock %}
     </head>
     <body>

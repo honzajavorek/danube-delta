@@ -86,12 +86,24 @@ def to_css_class(s):
 
 @register_filter
 def prevent_line_breaks(s):
-    segments = []
-    for i, word in enumerate(s.split()):
-        if i != 0:
-            if len(word) <= 3:
-                segments.append('&nbsp;')
+    parts = []
+    words = s.split()
+    for i, (word1, word2) in enumerate(zip(words, words[1:] + [None])):
+        parts.append(word1)
+        if word2:
+            if len(word2) <= 3:
+                parts.append('&nbsp;')
             else:
-                segments.append(' ')
-        segments.append(word)
-    return Markup(''.join(segments))
+                parts.append(' ')
+
+    return Markup(''.join(parts))
+
+
+@register_filter
+def google_fonts(fonts):
+    url = 'https://fonts.googleapis.com/css?family='
+    url += '|'.join([
+        urllib.parse.quote_plus(font) + ':400,700' for font in fonts
+    ])
+    url += '&amp;subset=latin,latin-ext'
+    return url

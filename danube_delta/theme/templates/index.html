@@ -18,10 +18,9 @@
 
 
 <div id="latest-article" class="latest-article">
-    <h2 class="supressed">Nejnovější článek</h2>
-
     <div class="latest-article-content article-content">
-        <h3 class="latest-article-title">{{ articles.0.title|prevent_line_breaks }}</h3>
+        <h2 class="latest-article-title">{{ articles.0.title|prevent_line_breaks }}</h2>
+        <p class="supressed">Nejnovější článek</p>
 
         {% if articles.0.image %}
             <img src="{{ articles.0.image }}" class="right img-fluid pull-xs-right img-rounded img-featured">
@@ -31,7 +30,7 @@
     </div>
 
     <div class="continue">
-        <a href="{{ SITEURL }}/{{ articles.0.url }}" class="continue-overlay" title="Na celý článek">
+        <a href="{{ SITEURL }}/{{ articles.0.url }}" class="continue-overlay" title="Celý článek">
             <button class="btn btn-primary btn-lg">
                 <i class="fa fa-align-left"></i> Celý článek
             </button>
@@ -44,7 +43,14 @@
 
     <div id="about" class="about">
         <h2 class="supressed">{{ AUTHOR }}</h2>
-        {{ ABOUT|markdown }}
+        <div class="about-box">
+            {% if ABOUT_IMAGE %}
+                <img src="{{ SITEURL }}/{{ ABOUT_IMAGE }}" class="about-image img-rounded">
+            {% endif %}
+            <div class="about-text">
+                {{ ABOUT|markdown }}
+            </div>
+        </div>
     </div>
 {% endif %}
 

@@ -1,5 +1,12 @@
 
+import os
+import hashlib
+import urllib.parse
+
 from pelican import signals
+
+
+GRAVATAR_SIZE = 200
 
 
 def register():
@@ -10,8 +17,52 @@ def process_author_info(content):
     if not content.source_path.endswith('.md'):
         return
 
+    process_gravatar(content)
+    process_about(content)
+    process_twitter(content)
+
+
+def process_gravatar(content):
+    gravatar = getattr(content, 'gravatar', None)
+    if gravatar:
+        params = {}
+        if 'DEFAULT_GRAVATAR' in content.settings:
+            default_gravatar_url = os.path.join(
+                content.settings['SITEURL'],
+                content.settings['DEFAULT_GRAVATAR']
+            )
+            params['d'] = default_gravatar_url
+        params['s'] = str(content.settings.get('GRAVATAR_SIZE', GRAVATAR_SIZE))
+
+        gravatar_url = (
+            'http://www.gravatar.com/avatar/' +
+            hashlib.md5(gravatar.lower().encode('utf-8')).hexdigest()
+        )
+        gravatar_url += '?' + urllib.parse.urlencode(params)
+        content.gravatar = gravatar_url
+    else:
+        content.gravatar = None
+
+
+def process_about(content):
     content.about = (
         getattr(content, 'about', None) or
         content.settings.get('ABOUT') or
+        None
+    )
+
+    about_image = (
+        getattr(content, 'aboutimage', None) or
+        content.settings.get('ABOUT_IMAGE') or
+        None
+    )
+    content.aboutimage = about_image
+    content.about_image = about_image
+
+
+def process_twitter(content):
+    content.twitter = (
+        getattr(content, 'twitter', None) or
+        content.settings.get('TWITTER_USERNAME_AUTHOR') or
         None
     )

@@ -4,6 +4,17 @@ import os
 
 AUTHOR = 'Honza Javorek'
 
+# ABOUT = 'This blog is about kittens and other cute animals.'
+# ABOUT_IMAGE = '/images/kitty.jpg'
+# ABOUT_HEADING = 'Honza'
+# DEFAULT_IMAGE = '/images/default-article-image.jpg'
+
+# SITENAME = 'My Blog'
+# SITESUBTITLE = 'The best blog.'
+
+# TWITTER_USERNAME_SITE = 'napyvo'
+# TWITTER_USERNAME_AUTHOR = 'honzajavorek'
+
 
 # Timezone, language
 TIMEZONE = 'Europe/Prague'
@@ -39,7 +50,12 @@ STATIC_PATHS = [
     'robots.txt',
     'favicon.ico',
     'CNAME',
+    'site.css',
 ]
+EXTRA_PATH_METADATA = {
+    'site.css': {'path': 'theme/css/site.css'},
+}
+USE_SITE_CSS = True
 
 
 # Generating
@@ -67,6 +83,7 @@ THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'theme')
 from .jinja_filters import JINJA_FILTERS  # NOQA
 THEME_STATIC_PATHS = ['static']
 
+GOOGLE_FONTS = ['Enriqueta', 'Slabo 13px']
 SUMMARY_MAX_LENGTH = 500
 
 

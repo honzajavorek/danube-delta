@@ -16,8 +16,8 @@
 
 
 {% block container %}
-<div class="site-header">
-    <a href="{{ SITEURL }}" class="site-header-title">
+<div class="site-navigation">
+    <a href="{{ SITEURL }}" class="btn btn-primary">
         <i class="fa fa-bars"></i> {{ SITENAME }}
     </a>
 </div>
@@ -40,8 +40,23 @@
         <hr>
 
         <div id="about" class="about">
-            <h2 class="supressed">{{ article.authors|join(',') }}</h2>
-            {{ article.about|markdown }}
+            <h2 class="supressed">
+                {% if ABOUT_HEADING %}
+                    {{ ABOUT_HEADING }}
+                {% else %}
+                    {{ article.authors|join(',') }}
+                {% endif %}
+            </h2>
+            <div class="about-box">
+                {% if article.gravatar %}
+                    <img src="{{ article.gravatar }}" class="about-image img-rounded">
+                {% elif article.about_image %}
+                    <img src="{{ SITEURL }}/{{ article.about_image }}" class="about-image img-rounded">
+                {% endif %}
+                <div class="about-text">
+                    {{ article.about|markdown }}
+                </div>
+            </div>
         </div>
     {% endif %}
 
@@ -71,7 +86,7 @@
                 })();
             </script>
             <noscript>
-                <p class="noscript"><em>Bez JavaScriptu se nezobrazí komentáře.</em></p>
+                <p class="noscript">Bez JavaScriptu se komentáře nezobrazí.</p>
             </noscript>
         </div>
     {% endif %}
@@ -92,6 +107,20 @@
 {% endblock %}
 
 
-{% block fb %}
-    <meta property="og:image" content="{{ article.image }}">
+{% block og %}
+    {% if article.image %}
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="og:image" content="{{ article.image }}">
+    {% else %}
+        <meta name="twitter:card" content="summary">
+        {% if ABOUT_IMAGE %}
+            <meta name="og:image" content="{{ SITEURL }}/{{ ABOUT_IMAGE }}">
+        {% endif %}
+    {% endif %}
+    {% if TWITTER_USERNAME_SITE %}
+        <meta name="twitter:site" content="@{{ TWITTER_USERNAME_SITE }}">
+    {% endif %}
+    {% if article.twitter %}
+        <meta name="twitter:creator" content="@{{ article.twitter }}">
+    {% endif %}
 {% endblock %}
