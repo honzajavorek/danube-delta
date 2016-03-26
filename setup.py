@@ -18,10 +18,7 @@ if sys.argv[-1] == 'publish':
     version_label = 'v{}'.format(version)
     sh.git.tag(a=version_label, m=version_label)
     sh.git.push('origin', 'master', '--tags')
-    sh.rm('-rf', 'dist', 'build', '*.egg-info')
-    sh.python('setup.py', 'sdist', 'bdist_wheel')
-    sh.twine('upload', 'dist/*')
-    sh.rm('-rf', 'dist', 'build', '*.egg-info')
+    # Publishing to PyPI is on Travis CI.
     sys.exit()
 
 
