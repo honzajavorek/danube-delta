@@ -18,7 +18,7 @@ AUTHOR = 'Honza Javorek'
 
 # Timezone, language
 TIMEZONE = 'Europe/Prague'
-LOCALE = 'cs_CZ.UTF-8'
+LOCALE = 'cs_CZ'
 DEFAULT_LANG = 'cs'
 DEFAULT_DATE_FORMAT = '%x'
 
