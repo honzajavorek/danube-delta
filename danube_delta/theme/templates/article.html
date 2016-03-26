@@ -78,6 +78,10 @@
             <div id="disqus_thread"></div>
             <script>
                 var disqus_sitename = {{ DISQUS_SITENAME|tojson|safe }};
+                var disqus_config = function () {
+                    this.page.identifier = {{ article.source_path|tojson|safe }};
+                    this.page.title = {{ article.title|tojson|safe }};
+                };
                 (function() {
                     var d = document, s = d.createElement('script');
                     s.src = '//' + disqus_sitename + '.disqus.com/embed.js';
