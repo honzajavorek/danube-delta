@@ -1,6 +1,5 @@
 
 from pelican import signals
-from pelican.utils import truncate_html_words
 
 from .utils import modify_html
 
