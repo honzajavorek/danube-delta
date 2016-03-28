@@ -1,11 +1,12 @@
 
 import os
 import sys
+import subprocess
 from codecs import open
 from setuptools import setup, find_packages
 
 
-version = '0.0.18'
+version = '0.0.19'
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -14,11 +15,10 @@ with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 
 if sys.argv[-1] == 'publish':
-    import sh
     version_label = 'v{}'.format(version)
-    sh.git.tag(a=version_label, m=version_label)
-    sh.git.push('origin', 'master', '--tags')
-    # Publishing to PyPI is on Travis CI.
+    subprocess.run(['git', 'tag', '-a', version_label, '-m', version_label])
+    subprocess.run(['git', 'push', 'origin', 'master', '--tags'])
+    # Publishing to PyPI is on Travis CI!
     sys.exit()
 
 
@@ -40,7 +40,6 @@ setup(
         'pillow',
         'python-slugify',
         'click',
-        'sh',
         'flake8',
         'markdown',
         'colorama',

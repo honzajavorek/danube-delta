@@ -7,7 +7,7 @@ import click
 from PIL import Image, ImageFilter
 
 from . import blog
-from .helpers import find_files
+from .helpers import header
 
 
 IMAGE_MAX_SIZE = 1900
@@ -27,25 +27,28 @@ def photos(context, path):
 
     config = context.obj
 
+    header('Looking for the latest article...')
     article_filename = find_last_article(config['CONTENT_DIR'])
     if not article_filename:
-        return click.echo('No articles.')
+        return click.secho('No articles.', fg='red')
 
+    header('Looking for images...')
     images = list(find_images(path))
     if not images:
-        return click.echo('Found no images.')
+        return click.secho('Found no images.', fg='red')
 
     for filename in images:
-        click.secho(filename, fg='yellow')
+        click.secho(filename, fg='green')
 
-    if not click.confirm('\nAdd these images to your last article'):
-        click.echo('Aborted!')
+    if not click.confirm('\nAdd these images to the latest article'):
+        click.secho('Aborted!', fg='red')
         context.exit(1)
 
     url_prefix = os.path.join('{filename}', IMAGES_PATH)
     images_dir = os.path.join(config['CONTENT_DIR'], IMAGES_PATH)
     os.makedirs(images_dir, exist_ok=True)
 
+    header('Processing images...')
     urls = []
     for filename in images:
         image_basename = os.path.basename(filename).lower()
@@ -65,7 +68,7 @@ def photos(context, path):
     for url in urls:
         content += '\n![image description]({})\n'.format(url)
 
-    click.echo('Adding to article: {}'.format(article_filename))
+    header('Adding to article: {}'.format(article_filename))
     with click.open_file(article_filename, 'a') as f:
         f.write(content)
     click.launch(article_filename)
@@ -105,3 +108,15 @@ def find_images(path):
             continue
         else:
             yield filename
+
+
+def find_files(path):
+    if os.path.isdir(path):
+        for root_path, dir_paths, file_paths in os.walk(path):
+            yield root_path
+            for dir_path in dir_paths:
+                yield os.path.join(root_path, dir_path)
+            for file_path in file_paths:
+                yield os.path.join(root_path, file_path)
+    else:
+        yield path

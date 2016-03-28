@@ -1,9 +1,13 @@
 
+from subprocess import SubprocessError
+
 import click
-from sh import flake8, ErrorReturnCode
 
 from . import blog
-from .helpers import redirect_output
+from .helpers import run
+
+
+EXCLUDE = ['.git', '__pycache', 'env', 'venv']
 
 
 @blog.command()
@@ -11,7 +15,11 @@ from .helpers import redirect_output
 def lint(context):
     """Looks for errors in source code of your blog"""
 
+    config = context.obj
     try:
-        flake8('.', exclude='env', **redirect_output())
-    except ErrorReturnCode:
+        run('flake8 {dir} --exclude={exclude}', format={
+            'dir': config['CWD'],
+            'exclude': ','.join(EXCLUDE),
+        }, redir=True)
+    except SubprocessError:
         context.exit(1)

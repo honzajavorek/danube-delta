@@ -3,10 +3,9 @@ import os
 import shutil
 
 import click
-from sh import git, pelican, ghp_import
 
 from . import blog
-from .helpers import redirect_output, choose_commit_emoji
+from .helpers import choose_commit_emoji, run, header
 
 
 @blog.command()
@@ -16,16 +15,18 @@ def deploy(context):
 
     config = context.obj
 
-    click.echo('Generating HTML...')
-    pelican(
-        config['CONTENT_DIR'],
-        output=config['OUTPUT_DIR'],
-        settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
-        _env={'PRODUCTION': '1'},
-        **redirect_output()
+    header('Generating HTML...')
+    command = (
+        'pelican "{content}" --output="{output}" --settings="{settings}" '
+        '--verbose'
     )
+    run(command, format={
+        'content': config['CONTENT_DIR'],
+        'output': config['OUTPUT_DIR'],
+        'settings': os.path.join(config['CWD'], config['SETTINGS_PATH']),
+    }, redir=True, env={'PRODUCTION': '1'})
 
-    click.echo('Removing unnecessary output...')
+    header('Removing unnecessary output...')
     unnecessary_paths = [
         'author', 'category', 'drafts', 'tag', 'feeds', 'tags.html',
         'authors.html', 'categories.html', 'archives.html',
@@ -34,27 +35,23 @@ def deploy(context):
         remove_path(os.path.join(config['OUTPUT_DIR'], path))
 
     if os.environ.get('TRAVIS'):  # Travis CI
-        click.echo('Setting up Git...')
-        git.config(
-            'user.name',
-            git('show', format='%cN', s=True, _tty_out=False).strip()
-        )
-        git.config(
-            'user.email',
-            git('show', format='%cE', s=True, _tty_out=False).strip()
-        )
+        header('Setting up Git...')
+        run('git config user.name ' + run('git show --format="%cN" -s'))
+        run('git config user.email ' + run('git show --format="%cE" -s'))
 
         github_token = os.environ.get('GITHUB_TOKEN')
         repo_slug = os.environ.get('TRAVIS_REPO_SLUG')
         origin = 'https://{}@github.com/{}.git'.format(github_token, repo_slug)
-        git.remote('set-url', 'origin', origin)
+        run('git remote set-url origin ' + origin)
 
-    click.echo('Rewriting gh-pages branch...')
-    commit_message = 'Deploying {}'.format(choose_commit_emoji())
-    ghp_import('-m', commit_message, config['OUTPUT_DIR'])
+    header('Rewriting gh-pages branch...')
+    run('ghp-import -m "{message}" {dir}'.format(
+        message='Deploying {}'.format(choose_commit_emoji()),
+        dir=config['OUTPUT_DIR'],
+    ))
 
-    click.echo('Pushing to GitHub...')
-    git.push('origin', 'gh-pages:gh-pages', force=True)
+    header('Pushing to GitHub...')
+    run('git push origin gh-pages:gh-pages --force')
 
 
 def remove_path(path):

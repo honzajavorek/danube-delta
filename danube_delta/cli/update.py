@@ -1,13 +1,11 @@
 
-from sh import git, pip
-
 from . import blog
-from .helpers import redirect_output
+from .helpers import run
 
 
 @blog.command()
 def update():
     """Gets other people's changes from GitHub"""
 
-    git.pull('origin', 'master', **redirect_output())
-    pip.install(r='./requirements.txt', upgrade=True, **redirect_output())
+    run('git pull origin master', redir=True)
+    run('pip install -r requirements.txt --upgrade', redir=True)
