@@ -16,9 +16,23 @@ PORT = 8000
 def preview(context):
     """Opens local preview of your blog website"""
 
-    raise NotImplementedError()
+    config = context.obj
 
-    # config = context.obj
+    # raise NotImplementedError()
+    #
+    #
+    # command = (
+    #     'pelican "{content}" --output="{output}" --settings="{settings}" '
+    #     '--autoreload --verbose --ignore-cache'
+    # ).format(**{
+    #     'content': config['CONTENT_DIR'],
+    #     'output': config['OUTPUT_DIR'],
+    #     'settings': os.path.join(config['CWD'], config['SETTINGS_PATH']),
+    # })
+    # import subprocess, shlex
+    # subprocess.run(shlex.split(command))
+    #
+    #
     # state = {'ready': False}
     #
     # def open_browser(line):
@@ -33,15 +47,15 @@ def preview(context):
     #     command = 'python -m http.server ' + str(PORT)
     #     server_proc = run(command, bg=True)
     #
-    #     # command = (
-    #     #     'pelican "{content}" --output="{output}" --settings="{settings}" '
-    #     #     '--autoreload --verbose --ignore-cache'
-    #     # )
-    #     # run(command, format={
-    #     #     'content': config['CONTENT_DIR'],
-    #     #     'output': config['OUTPUT_DIR'],
-    #     #     'settings': os.path.join(config['CWD'], config['SETTINGS_PATH']),
-    #     # }, redir=True, redir_hook=open_browser)
+    #     command = (
+    #         'pelican "{content}" --output="{output}" '
+    #         ' --settings="{settings}" --autoreload --verbose --ignore-cache'
+    #     )
+    #     run(command, format={
+    #         'content': config['CONTENT_DIR'],
+    #         'output': config['OUTPUT_DIR'],
+    #         'settings': os.path.join(config['CWD'], config['SETTINGS_PATH']),
+    #     }, redir=True, redir_hook=open_browser)
     #
     # except:
     #     if server_proc is not None:
