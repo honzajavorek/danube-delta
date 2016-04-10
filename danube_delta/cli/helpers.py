@@ -28,15 +28,14 @@ def choose_commit_emoji():
     return random.choice(COMMIT_EMOJIS)
 
 
-def run(command, env=None, bg=False):
-    click.secho(command, fg='magenta', bold=True, err=True)
-
+def run(command, env=None, bg=False, capture=False):
     options = {
         'env': dict(os.environ, **env) if env else os.environ,
-        # 'stdout': subprocess.PIPE,
-        'stderr': subprocess.STDOUT,
         'universal_newlines': True,
     }
+    if capture:
+        options['stdout'] = subprocess.PIPE
+        options['stderr'] = subprocess.STDOUT
     if bg:
         return subprocess.Popen(shlex.split(command), **options)
 
@@ -46,9 +45,22 @@ def run(command, env=None, bg=False):
 
 
 def header(text):
-    click.secho(text, fg='yellow')
+    click.secho(text, fg='yellow', bold=True)
 
 
 def abort(context):
     click.echo('Aborted!')
     context.exit(1)
+
+
+def pelican(config, *extra_params, production=False):
+    command = 'pelican "{content}" --output="{output}" --settings="{settings}"'
+    if extra_params:
+        command = ' '.join([command] + list(extra_params))
+
+    command = command.format(
+        content=config['CONTENT_DIR'],
+        output=config['OUTPUT_DIR'],
+        settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
+    )
+    run(command, env={'PRODUCTION': '1'} if production else None)

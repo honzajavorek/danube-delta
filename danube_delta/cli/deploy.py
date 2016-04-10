@@ -5,7 +5,7 @@ import shutil
 import click
 
 from . import blog
-from .helpers import choose_commit_emoji, run, header
+from .helpers import choose_commit_emoji, run, header, pelican
 
 
 @blog.command()
@@ -16,15 +16,7 @@ def deploy(context):
     config = context.obj
 
     header('Generating HTML...')
-    command = (
-        'pelican "{content}" --output="{output}" --settings="{settings}" '
-        '--verbose'
-    ).format(
-        content=config['CONTENT_DIR'],
-        output=config['OUTPUT_DIR'],
-        settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
-    )
-    run(command, env={'PRODUCTION': '1'})
+    pelican(config, '--verbose', production=True)
 
     header('Removing unnecessary output...')
     unnecessary_paths = [
@@ -36,8 +28,14 @@ def deploy(context):
 
     if os.environ.get('TRAVIS'):  # Travis CI
         header('Setting up Git...')
-        run('git config user.name ' + run('git show --format="%cN" -s'))
-        run('git config user.email ' + run('git show --format="%cE" -s'))
+        run(
+            'git config user.name ' +
+            run('git show --format="%cN" -s', capture=True)
+        )
+        run(
+            'git config user.email ' +
+            run('git show --format="%cE" -s', capture=True)
+        )
 
         github_token = os.environ.get('GITHUB_TOKEN')
         repo_slug = os.environ.get('TRAVIS_REPO_SLUG')

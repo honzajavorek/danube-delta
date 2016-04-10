@@ -1,5 +1,6 @@
 
 import re
+import subprocess
 
 import click
 import requests
@@ -17,18 +18,22 @@ def publish(context):
     run('git add -A')
 
     header('Displaying changes...')
-    command = 'git -c color.status=always status'
-    status = run(command.stdout)
-    click.echo(status)
+    run('git -c color.status=always status')
 
     if not click.confirm('\nContinue publishing'):
         run('git reset HEAD --')
         abort(context)
 
     header('Saving changes...')
-    run('git commit -m "{message}"'.format(
-        message='Publishing {}'.format(choose_commit_emoji())
-    ))
+    try:
+        run('git commit -m "{message}"'.format(
+            message='Publishing {}'.format(choose_commit_emoji())
+        ), capture=True)
+    except subprocess.CalledProcessError as e:
+        if 'nothing to commit' not in e.stdout:
+            raise
+        else:
+            click.echo('Nothing to commit.')
 
     header('Pushing to GitHub...')
     branch = get_branch()
@@ -58,10 +63,10 @@ def get_pr_link(branch):
 
 
 def get_repo_slug():
-    url = run('git remote get-url origin')
+    url = run('git remote get-url origin', capture=True)
     return re.search(r'github\.com[\:\/](.+)\.git$', url).group(1)
 
 
 def get_branch():
-    branches = run('git branch --no-color')
+    branches = run('git branch --no-color', capture=True)
     return re.search(r'\*\s+(\S+)', branches).group(1)

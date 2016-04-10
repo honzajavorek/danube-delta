@@ -5,7 +5,7 @@ import time
 import click
 
 from . import blog
-from .helpers import run, abort
+from .helpers import run, abort, pelican
 
 
 PORT = 8000
@@ -37,15 +37,3 @@ def preview(context):
             raise
     except KeyboardInterrupt:
         abort(context)
-
-
-def pelican(config, *extra_params):
-    command = 'pelican "{content}" --output="{output}" --settings="{settings}"'
-    if extra_params:
-        command = ' '.join([command] + list(extra_params))
-
-    run(command.format(
-        content=config['CONTENT_DIR'],
-        output=config['OUTPUT_DIR'],
-        settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
-    ))
