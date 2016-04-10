@@ -54,21 +54,6 @@
     <body>
         <div class="container {% block class %}{% endblock %}">
             {% block container %}{% endblock %}
-
-            {% block feed %}
-                <hr>
-
-                <div id="feeds" class="feeds">
-                    <a href="{{ SITEURL }}/{{ FEED_ATOM }}" class="btn btn-primary-outline">
-                        <i class="fa fa-feed"></i> Články
-                    </a>
-                    {% if DISQUS_SITENAME %}
-                        <a href="http://{{ DISQUS_SITENAME }}.disqus.com/latest.rss" class="btn btn-primary-outline">
-                            <i class="fa fa-feed"></i> Všechny komentáře
-                        </a>
-                    {% endif %}
-                </div>
-            {% endblock %}
         </div>
 
         <hr>

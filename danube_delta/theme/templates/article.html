@@ -95,19 +95,16 @@
         </div>
     {% endif %}
 </div>
-{% endblock %}
 
+{% if DISQUS_SITENAME %}
+    <hr>
 
-{% block feed %}
-    {% if DISQUS_SITENAME %}
-        <hr>
-
-        <div id="feeds" class="feeds">
-            <a href="http://{{ DISQUS_SITENAME }}.disqus.com/{{ article.slug|replace('-', '_') }}/latest.rss" class="btn btn-primary-outline">
-                <i class="fa fa-feed"></i> Komentáře
-            </a>
-        </div>
-    {% endif %}
+    <div id="feeds" class="feeds">
+        <a href="http://{{ DISQUS_SITENAME }}.disqus.com/{{ article.slug|replace('-', '_') }}/latest.rss" class="btn btn-primary-outline">
+            <i class="fa fa-feed"></i> Komentáře
+        </a>
+    </div>
+{% endif %}
 {% endblock %}
 
 
