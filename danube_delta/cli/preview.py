@@ -18,10 +18,10 @@ def preview(context):
 
     config = context.obj
 
+    pelican(config, '--verbose', '--ignore-cache')
+
     server_proc = None
     os.chdir(config['OUTPUT_DIR'])
-
-    pelican(config, '--verbose', '--ignore-cache')
     try:
         try:
             command = 'python -m http.server ' + str(PORT)
@@ -30,6 +30,7 @@ def preview(context):
             time.sleep(3)
             click.launch('http://localhost:8000')
 
+            time.sleep(5)
             pelican(config, '--autoreload')
         except:
             if server_proc is not None:

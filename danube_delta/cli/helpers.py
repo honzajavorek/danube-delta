@@ -54,6 +54,8 @@ def abort(context):
 
 
 def pelican(config, *extra_params, production=False):
+    os.makedirs(config['OUTPUT_DIR'], exist_ok=True)
+
     command = 'pelican "{content}" --output="{output}" --settings="{settings}"'
     if extra_params:
         command = ' '.join([command] + list(extra_params))
