@@ -19,12 +19,12 @@ def deploy(context):
     command = (
         'pelican "{content}" --output="{output}" --settings="{settings}" '
         '--verbose'
+    ).format(
+        content=config['CONTENT_DIR'],
+        output=config['OUTPUT_DIR'],
+        settings=os.path.join(config['CWD'], config['SETTINGS_PATH']),
     )
-    run(command, format={
-        'content': config['CONTENT_DIR'],
-        'output': config['OUTPUT_DIR'],
-        'settings': os.path.join(config['CWD'], config['SETTINGS_PATH']),
-    }, redir=True, env={'PRODUCTION': '1'})
+    run(command, env={'PRODUCTION': '1'})
 
     header('Removing unnecessary output...')
     unnecessary_paths = [

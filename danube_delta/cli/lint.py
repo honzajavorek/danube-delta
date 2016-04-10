@@ -17,9 +17,9 @@ def lint(context):
 
     config = context.obj
     try:
-        run('flake8 {dir} --exclude={exclude}', format={
-            'dir': config['CWD'],
-            'exclude': ','.join(EXCLUDE),
-        }, redir=True)
+        run('flake8 {dir} --exclude={exclude}'.format(
+            dir=config['CWD'],
+            exclude=','.join(EXCLUDE),
+        ))
     except SubprocessError:
         context.exit(1)

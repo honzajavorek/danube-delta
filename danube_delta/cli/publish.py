@@ -26,15 +26,13 @@ def publish(context):
         abort(context)
 
     header('Saving changes...')
-    run('git commit -m "{message}"', format={
-        'message': 'Publishing {}'.format(choose_commit_emoji())
-    }, redir=True)
+    run('git commit -m "{message}"'.format(
+        message='Publishing {}'.format(choose_commit_emoji())
+    ))
 
     header('Pushing to GitHub...')
     branch = get_branch()
-    run('git push origin {branch}:{branch}', format={
-        'branch': branch,
-    }, redir=True)
+    run('git push origin {branch}:{branch}'.format(branch=branch))
 
     pr_link = get_pr_link(branch)
     if pr_link:

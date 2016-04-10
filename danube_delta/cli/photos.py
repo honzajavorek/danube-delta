@@ -7,7 +7,7 @@ import click
 from PIL import Image, ImageFilter
 
 from . import blog
-from .helpers import header
+from .helpers import header, abort
 
 
 IMAGE_MAX_SIZE = 1900
@@ -41,8 +41,7 @@ def photos(context, path):
         click.secho(filename, fg='green')
 
     if not click.confirm('\nAdd these images to the latest article'):
-        click.secho('Aborted!', fg='red')
-        context.exit(1)
+        abort(config)
 
     url_prefix = os.path.join('{filename}', IMAGES_PATH)
     images_dir = os.path.join(config['CONTENT_DIR'], IMAGES_PATH)

@@ -1,6 +1,5 @@
 
 import os
-import sys
 import shlex
 import random
 import subprocess
@@ -29,39 +28,21 @@ def choose_commit_emoji():
     return random.choice(COMMIT_EMOJIS)
 
 
-def run(command, format=None, env=None, redir=False, redir_hook=None,
-        bg=False):
-    if format:
-        command = command.format(**format)
+def run(command, env=None, bg=False):
+    click.secho(command, fg='magenta', bold=True, err=True)
 
     options = {
-        'stdout': subprocess.PIPE,
-        'stderr': subprocess.STDOUT,
-        'bufsize': 1,
-        'universal_newlines': True,
         'env': dict(os.environ, **env) if env else os.environ,
+        # 'stdout': subprocess.PIPE,
+        'stderr': subprocess.STDOUT,
+        'universal_newlines': True,
     }
-
     if bg:
         return subprocess.Popen(shlex.split(command), **options)
 
-    with subprocess.Popen(shlex.split(command), **options) as proc:
-        if redir:
-            click.secho(command, fg='cyan', err=True)
-            for line in iter(proc.stdout.readline, ''):
-                print('r')
-                # if redir_hook:
-                #     line = redir_hook(line)
-                # if line is not None:
-                sys.stdout.write(line)
-
-        print('end')
-        stdout = proc.communicate()[0].strip()
-        retcode = proc.poll()
-        if retcode:
-            raise subprocess.CalledProcessError(retcode, proc.args,
-                                                output=stdout, stderr='')
-        return stdout
+    options['check'] = True
+    proc = subprocess.run(shlex.split(command), **options)
+    return proc.stdout
 
 
 def header(text):
