@@ -114,6 +114,7 @@
 {% block og %}
     {% if article.image %}
         <meta name="twitter:card" content="summary_large_image">
+        <meta name="og:description" content="{{ self.title() }}">
         <meta name="og:image" content="{{ article.image }}">
     {% else %}
         <meta name="twitter:card" content="summary">
