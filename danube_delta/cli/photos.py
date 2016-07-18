@@ -65,6 +65,7 @@ def photos(context, path):
 
     content = '\n'
     for url in urls:
+        url = url.replace('\\', '/')
         content += '\n![image description]({})\n'.format(url)
 
     header('Adding to article: {}'.format(article_filename))
