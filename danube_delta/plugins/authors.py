@@ -3,7 +3,7 @@ import os
 import hashlib
 import urllib.parse
 
-from pelican import signals
+from pelican import signals, contents
 
 
 GRAVATAR_SIZE = 200
@@ -14,7 +14,7 @@ def register():
 
 
 def process_author_info(content):
-    if not content.source_path.endswith('.md'):
+    if not isinstance(content, contents.Article):
         return
 
     process_gravatar(content)

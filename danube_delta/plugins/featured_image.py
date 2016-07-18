@@ -1,7 +1,7 @@
 
 import os
 
-from pelican import signals
+from pelican import signals, contents
 
 from .utils import modify_html
 
@@ -11,7 +11,7 @@ def register():
 
 
 def attach_featured_image(content):
-    if not content.source_path.endswith('.md'):
+    if not isinstance(content, contents.Article):
         return
 
     image = getattr(content, 'image', None)

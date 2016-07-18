@@ -1,5 +1,5 @@
 
-from pelican import signals
+from pelican import signals, contents
 
 from .utils import modify_html
 
@@ -9,7 +9,7 @@ def register():
 
 
 def make_summary_plain(content):
-    if not content.source_path.endswith('.md'):
+    if not isinstance(content, contents.Article):
         return
 
     content._summary = content._content

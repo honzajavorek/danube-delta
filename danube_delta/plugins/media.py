@@ -4,7 +4,7 @@ import re
 import logging
 
 from lxml import etree
-from pelican import signals
+from pelican import signals, contents
 from PIL import Image, ImageFilter
 
 from .utils import modify_html, wrap_element
@@ -29,7 +29,7 @@ def register():
 
 
 def process_media(content):
-    if not content.source_path.endswith('.md'):
+    if not isinstance(content, contents.Article):
         return
 
     with modify_html(content) as html_tree:
@@ -114,15 +114,18 @@ def create_img_thumbnail(img, content_dir):
     else:
         filename = get_image_filename(content_dir, img_src)
         info = get_image_info(filename)
-        if info['needs_click_to_enlarge']:
-            wrap_element(img, etree.Element('a', attrib={
-                'href': img_src,
-                'target': '_blank',
-                'title': img.get('alt'),
-            }))
-        if info['needs_thumbnail']:
-            tn_filename = create_thumbnail(filename)
-            img.set('src', get_image_src(tn_filename))
+        if info['is_image']:
+            if info['needs_click_to_enlarge']:
+                wrap_element(img, etree.Element('a', attrib={
+                    'href': img_src,
+                    'target': '_blank',
+                    'title': img.get('alt'),
+                }))
+            if info['needs_thumbnail']:
+                tn_filename = create_thumbnail(filename)
+                img.set('src', get_image_src(tn_filename))
+        else:
+            logger.error('Found non-existing image: %s', img_src)
 
 
 def get_image_info(filename):
