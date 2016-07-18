@@ -35,8 +35,7 @@ h1,
 h2,
 h3,
 h4 {
-    font-family: 'Enriqueta', serif;
-    font-weight: bold;
+    font-family: 'Roboto Slab', serif;
     color: #242424;
 }
 
@@ -207,6 +206,10 @@ hr {
     margin: 0 0.5em;
 }
 
+.call-to-action {
+  padding: 1rem 0;
+}
+
 .feeds {
     text-align: center;
 }
@@ -215,62 +218,62 @@ hr {
     margin: 0 0.5rem;
 }
 
-.feeds .btn-primary-outline {
+.btn-primary-outline {
     color: #242424;
     border-color: #242424;
 }
 
-.feeds .btn-primary-outline:hover,
-.feeds .btn-primary-outline:active,
-.feeds .btn-primary-outline:focus,
-.feeds .btn-primary-outline:active:hover {
+.btn-primary-outline:hover,
+.btn-primary-outline:active,
+.btn-primary-outline:focus,
+.btn-primary-outline:active:hover {
     color: #FFF;
     background-color: #242424;
     border-color: #242424;
 }
 
-.article-header {
+.header {
     text-align: center;
     margin: 6rem 0 10rem 0;
 }
 
-.article-header h1 {
+.header h1 {
     font-size: 4rem;
     font-weight: normal;
     margin-bottom: 3rem;
     padding: 0 1em;
 }
 
-.article-content {
+.content {
     line-height: 2em;
 }
 
-.article-content h1,
-.article-content h2,
-.article-content h3,
-.article-content h4 {
+.content h1,
+.content h2,
+.content h3,
+.content h4 {
     margin: 2em 0 0.5em 0;
     line-height: 1.5em;
 }
 
-.article-content a:visited {
+.article-container .content a:visited {
     color: #999;
 }
 
-.article-content img.left {
+.content img.left {
     margin: 0.5em 2em 2em 0;
 }
 
-.article-content img.right {
+.content img.right {
     margin: 0.5em 0 2em 2em;
 }
 
-.article-content ul {
+.content ul {
     list-style: none;
     padding-left: 0;
 }
 
-.article-content ul li::before {
+.content ul li::before {
     content: '■';
     position: absolute;
     left: 0.3em;
@@ -278,7 +281,7 @@ hr {
     color: #90AA3C;
 }
 
-.article-content ul li {
+.content ul li {
     position: relative;
     padding-left: 2em;
 }

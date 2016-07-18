@@ -18,12 +18,12 @@
 {% block container %}
 <div class="site-navigation">
     <a href="{{ SITEURL }}" class="btn btn-primary">
-        <i class="fa fa-bars"></i> {{ SITENAME }}
+        <i class="fa fa-home"></i> {{ SITENAME }}
     </a>
 </div>
 
 <div class="article-container">
-    <div class="article-header">
+    <div class="header">
         <h1>{{ article.title|prevent_line_breaks }}</h1>
         <p class="supressed">
             <time datetime="{{ article.date.isoformat() }}" pubdate>{{ article.locale_date }}</time>
@@ -32,7 +32,7 @@
         </p>
     </div>
 
-    <div class="article-content">
+    <div class="content">
         {{ article.content }}
     </div>
 

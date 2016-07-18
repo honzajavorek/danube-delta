@@ -83,7 +83,7 @@ THEME = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'theme')
 from .jinja_filters import JINJA_FILTERS  # NOQA
 THEME_STATIC_PATHS = ['static']
 
-GOOGLE_FONTS = ['Enriqueta', 'Slabo 13px']
+GOOGLE_FONTS = ['Roboto Slab', 'Slabo 13px']
 
 
 # Development
