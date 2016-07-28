@@ -7,7 +7,7 @@ from . import blog
 from .helpers import run
 
 
-EXCLUDE = ['.git', '__pycache', 'env', 'venv']
+EXCLUDE = ['.git', '__pycache', 'env', 'venv', 'settings.py']
 
 
 @blog.command()
