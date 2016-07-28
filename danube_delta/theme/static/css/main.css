@@ -207,26 +207,31 @@ hr {
 }
 
 .call-to-action {
-  padding: 1rem 0;
+  padding: 4rem 0;
 }
 
-.feeds {
+.feeds, .call-to-action {
     text-align: center;
 }
 
-.feeds .btn {
-    margin: 0 0.5rem;
+.feeds .btn, .call-to-action .btn {
+    margin: 0.5rem 0.5rem;
 }
 
-.btn-primary-outline {
+.feeds .btn-primary-outline,
+.call-to-action .btn-primary-outline {
     color: #242424;
     border-color: #242424;
 }
 
-.btn-primary-outline:hover,
-.btn-primary-outline:active,
-.btn-primary-outline:focus,
-.btn-primary-outline:active:hover {
+.feeds .btn-primary-outline:hover,
+.feeds .btn-primary-outline:active,
+.feeds .btn-primary-outline:focus,
+.feeds .btn-primary-outline:active:hover,
+.call-to-action .btn-primary-outline:hover,
+.call-to-action .btn-primary-outline:active,
+.call-to-action .btn-primary-outline:focus,
+.call-to-action .btn-primary-outline:active:hover {
     color: #FFF;
     background-color: #242424;
     border-color: #242424;
