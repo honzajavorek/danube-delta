@@ -149,6 +149,7 @@ hr {
 
 .img-featured {
     max-width: 30%;
+    margin-left: 1rem;
 }
 
 .continue-overlay {
