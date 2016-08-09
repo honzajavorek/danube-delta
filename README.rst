@@ -93,6 +93,8 @@ Usage
             repo: "honzajavorek/my-awesome-blog"
     sudo: false
 
+Head to the `user guide <https://github.com/honzajavorek/danube-delta/blob/master/user-guide.rst>`__ for more information on how to use a blog based on Danube Delta.
+
 
 Developing Danube Delta
 -----------------------
