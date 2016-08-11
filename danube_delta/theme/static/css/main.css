@@ -19,7 +19,7 @@ figure > a {
     margin-right: auto;
 }
 
-@media (min-width: 1000px) {
+@media only screen and (min-width: 1000px) {
     .container {
       max-width: 940px;
     }
@@ -362,6 +362,27 @@ h4.supressed {
 .about-text {
     padding: 0 0 0 2rem;
 }
+
+@media only screen and (max-width: 550px) {
+    .about-box {
+        display: block;
+        text-align: center;
+    }
+
+    .about-image {
+        float: right;
+        width: 6em;
+        margin: 0.3rem 0 1rem 1rem;
+    }
+
+    .about-image,
+    .about-text {
+        padding: 0;
+        text-align: left;
+        display: block;
+    }
+}
+
 
 i.fa {
     margin-right: 0.3rem;
