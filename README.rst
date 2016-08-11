@@ -3,8 +3,7 @@ Danube Delta
 
 `Honza Javorek <https://github.com/honzajavorek/>`__'s `Pelican <http://www.getpelican.com/>`__ setup.
 
-.. image:: https://travis-ci.org/honzajavorek/danube-delta.svg?branch=master
-    :target: https://travis-ci.org/honzajavorek/danube-delta
+|PyPI version| |Build Status|
 
 
 Installation
@@ -109,6 +108,12 @@ Name
 In 2012 I've seen some `pelicans <https://en.wikipedia.org/wiki/Pelican>`__ in the `Danube Delta <https://en.wikipedia.org/wiki/Danube_Delta>`__:
 
 .. figure:: danube-delta.jpg
-   :alt: Pelicans in the Danube Delta
+    :alt: Pelicans in the Danube Delta
 
-   Photo: © 2012 Honza Javorek
+    Photo: © 2012 Honza Javorek
+
+
+.. |PyPI version| image:: https://badge.fury.io/py/danube-delta.svg
+    :target: https://badge.fury.io/py/danube-delta
+.. |Build Status| image:: https://travis-ci.org/honzajavorek/danube-delta.svg?branch=master
+    :target: https://travis-ci.org/honzajavorek/danube-delta
