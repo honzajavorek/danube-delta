@@ -1,21 +1,19 @@
+sudo: false
 language: "python"
 python:
-    - "3.5"
-install:
-    - "pip install -e ."
+  - "3.5"
 cache: "pip"
+env:
+  global:  # 'travis encrypt PYPI_PASSWORD=... GH_TOKEN=...'
+    - PYPI_USERNAME=honzajavorek
+    - secure: "bGvK9QI/y/5mTxCHHMlbehvpQFjuuMn35Prp8QGGwyBCdiD2XXVjPeLuTpBz/A6MZaQp5srPJagbhsHePvH//md1SHMPy6lfxw1RvYPxr9iPQ9ATFkIN6z/UtfpGJJUWj+jWwaICZzspySsvBhSd0ipWfIkfGM+HzMyPuRKFyKdxCCnFyUVN9AvvOKLrXl8saRSkXfpC54/LPhvL4WQMpkKEJyvMZtzsDcvP43+wWtw/cXpNpamfGe+iQ6wHokk0yUjIpSQBhzC1gP/ZR+TsskD97ci3c7P/2CXIDHlfgsSpl3K40NThv450+E6QGV1g/x6jCMb6Zaven5wOSorgQgkpeHDXAYinYNd8WdKiE/15KufKTVH+3l5VzWZKjyjzXQ00nfDfg2LJQV+BUFBZ/mL7P8XjHr5ZLbGXjRSW0vAjqBOXbE3lJjvvBhOKR3UlTxzJwrJEmo+ikJQbeH37lDJZUKMzWVQ2SwZQ23lVrVUcM8eaf2fu33YFgk8XIyNZWQyeHDMeVUgfBNRN+HOsXkKF540c6WycCW3KYP3wiQ4RvwyzVZD2Y/9TOcfi0lU3gTypOwaNyOItZzUGencFLGUstYzekFqXkUKdvpCYjFUhxACPrjjAzqp4O+N+OEvRJgDf30/1EroZFMwmCd1k/KQzuqSsTO/cNk36OclH/b4="
+install:
+  - "pip install -e .[tests,release]"
 script:
-    - "flake8 ."
-    - "which blog"
-    - "python -c 'from danube_delta.settings import *'"
-deploy:
-    provider: "pypi"
-    user: "honzajavorek"
-    password:
-        secure: "CJxnT5OyRKoIiLqIOOJd1ZaH62rTuvR2LCY+E9DS77hbbhBjDTlugNcjr9yF+nmI0wE0JzgESYL9qrq6xOCPXGOfvaynDLvQpJ81B7wTMW6u+Gf9/Njqvy9EfjrbFswvMpnp9M56AFdMekkmkTL85CCEatoHAOTeElyYNSksMeIjTcKaash1C3LsxkGpRMMSk6ZMuAIKy8+rxXnbz21UEjZzSFfWeO55gec2tyBTmbWTbN457q+KKNr8APiu6/qz2xxz40zBj1UYcgFm9duvt3EgvOr9Urjs2GM2ODmeojLGWp5iK0sipdgKDBJwTBVwakMD5O9LbtB6i6KkzsWSAg3Quarez1ufbukAs4PKCBZX4RRYO+JO0aM8H/vCMz+dvrdg4YpSfdDng1kEUiQN7VLGBGft8XL9xz+QmietdSS+DZYJy1i8nv01+i1NHM3FWJeZxtj58IJnb5TpqOzC8/PCbwZunLg2t/CyhuGd+T6V0cQHeIOi2dEucY1xEwea7BQJTURMIauLY3YyVNRPQoW9/1An8wmaqOXUhY+7M2J/TQtb2dwpoDmQqfgqd6caDEZdm3KA2sPBlC3ORL619IQEFE4JFGvkyjRPZ60uHTGamo2cvjcch04/0aMun+lPseNyNMRmzBKoGSXdoeDJkVEYZvmBewd1gGFz5yhhh7Q="
-    on:
-        tags: true
-        distributions: "sdist bdist_wheel"
-        branch: "master"
-        repo: "honzajavorek/danube-delta"
-sudo: false
+  - "flake8"
+  - "which blog"
+  - "python -c 'from danube_delta.settings import *'"
+after_success:
+  - "git config user.name 'Honza Javorek'"
+  - "git config user.email 'mail@honzajavorek.cz'"
+  - "python setup.py publish"

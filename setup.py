@@ -1,62 +1,67 @@
+# -*- coding: utf-8 -*-
 
-import os
+
+from __future__ import print_function
+
 import sys
-import subprocess
-from codecs import open
-from setuptools import setup, find_packages
+from setuptools import setup
+
+try:
+    from semantic_release import setup_hook
+    setup_hook(sys.argv)
+except ImportError:
+    message = "Unable to locate 'semantic_release', releasing won't work"
+    print(message, file=sys.stderr)
 
 
 version = '1.0.1'
 
 
-here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = f.read()
-
-
-if sys.argv[-1] == 'publish':
-    version_label = 'v{}'.format(version)
-    subprocess.run(['git', 'tag', '-a', version_label, '-m', version_label])
-    subprocess.run(['git', 'push', 'origin', 'master', '--tags'])
-    # Publishing to PyPI is on Travis CI!
-    sys.exit()
+install_requires = [
+    'pelican',
+    'ghp-import',
+    'lxml',
+    'pillow',
+    'python-slugify',
+    'click',
+    'markdown',
+    'colorama',
+    'requests',
+    'flake8',  # intentionally here - used by 'blog lint'
+]
+tests_require = []
+release_requires = ['python-semantic-release']
 
 
 setup(
     name='danube-delta',
-    description='Honza Javorek\'s Pelican setup',
-    long_description=long_description,
     version=version,
-    url='http://github.com/honzajavorek/danube-delta',
+    description='Honza Javorek\'s Pelican setup',
+    long_description=open('README.rst').read(),
     author='Honza Javorek',
     author_email='mail@honzajavorek.cz',
-    license='MIT',
+    url='http://github.com/honzajavorek/danube-delta',
+    license=open('LICENSE').read(),
     packages=find_packages(),
     include_package_data=True,
-    install_requires=[
-        'pelican',
-        'ghp-import',
-        'lxml',
-        'pillow',
-        'python-slugify',
-        'click',
-        'flake8',
-        'markdown',
-        'colorama',
-        'requests',
-    ],
+    install_requires=install_requires,
+    tests_require=tests_require,
+    extras_require={
+        'tests': tests_require,
+        'release': release_requires,
+    },
     entry_points={
         'console_scripts': [
             'blog = danube_delta.cli:blog'
         ]
     },
-    classifiers=[
+    classifiers=(
         'Environment :: Console',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3 :: Only',
-    ],
+    ),
     keywords='pelican blog',
 )
