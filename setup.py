@@ -4,7 +4,7 @@
 from __future__ import print_function
 
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 
 try:
     from semantic_release import setup_hook
