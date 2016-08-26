@@ -83,6 +83,20 @@ please.
 
     ~/blog.python.cz/$ python3 -m venv venv
     ~/blog.python.cz/$ . ./venv/bin/activate
+    
+* In some cases you may get an error:
+
+:: 
+    
+    Error: Command '['/Users/your_name/blog.python.cz/venv/bin/python3', '-Im', 'ensurepip', '--upgrade', '--default-pip']' returned non-zero exit status 1
+    
+Try solve it with command in ~/blog.python.cz/
+
+::
+
+    $ python3 -m venv venv --without-pip
+    $ . ./venv/bin/activate
+    
 
 Now we need to install dependencies:
 
