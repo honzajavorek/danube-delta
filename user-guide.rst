@@ -95,7 +95,7 @@ Try solve it with command in ~/blog.python.cz/
 ::
 
     $ python3 -m venv venv --without-pip
-    $ . ./venv/bin/activate
+    $ source venv/bin/activate
     
 
 Now we need to install dependencies:
