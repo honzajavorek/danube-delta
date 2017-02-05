@@ -45,6 +45,9 @@
                     {{ ABOUT_HEADING }}
                 {% else %}
                     {{ article.authors|join(',') }}
+                    {% if article.twitter %}
+                        (<a href="http://twitter.com/{{ article.twitter }}" target="_blank">@{{ article.twitter }}</a>)
+                    {% endif %}
                 {% endif %}
             </h2>
             <div class="about-box">
