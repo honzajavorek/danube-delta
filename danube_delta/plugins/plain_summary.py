@@ -1,4 +1,3 @@
-
 from pelican import signals, contents
 
 from .utils import modify_html

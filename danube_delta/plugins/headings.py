@@ -1,4 +1,3 @@
-
 from lxml import etree
 from pelican import signals, contents
 

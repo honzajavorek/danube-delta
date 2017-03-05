@@ -1,4 +1,3 @@
-
 from subprocess import SubprocessError
 
 import click
