@@ -1,4 +1,3 @@
-
 import re
 import os
 from glob import glob
@@ -31,6 +30,7 @@ def photos(context, path):
     article_filename = find_last_article(config['CONTENT_DIR'])
     if not article_filename:
         return click.secho('No articles.', fg='red')
+    click.echo(os.path.basename(article_filename))
 
     header('Looking for images...')
     images = list(find_images(path))
@@ -50,7 +50,7 @@ def photos(context, path):
     header('Processing images...')
     urls = []
     for filename in images:
-        image_basename = os.path.basename(filename).lower()
+        image_basename = os.path.basename(filename).replace(' ', '-').lower()
         urls.append(os.path.join(url_prefix, image_basename))
         image_filename = os.path.join(images_dir, image_basename)
 

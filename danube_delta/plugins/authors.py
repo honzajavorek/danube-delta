@@ -1,8 +1,8 @@
-
 import os
 import hashlib
 import urllib.parse
 
+import requests
 from pelican import signals, contents
 
 
@@ -17,23 +17,34 @@ def process_author_info(content):
     if not isinstance(content, contents.Article):
         return
 
+    process_twitter(content)
     process_gravatar(content)
     process_about(content)
-    process_twitter(content)
 
 
 def process_gravatar(content):
     gravatar = getattr(content, 'gravatar', None)
     if gravatar:
         params = {}
-        if 'DEFAULT_GRAVATAR' in content.settings:
+
+        if content.twitter:
+            url = 'https://twitter.com/{}/profile_image?size=original'
+            url = url.format(content.twitter)
+            try:
+                resp = requests.head(url)
+                resp.raise_for_status()
+                params['d'] = resp.headers['location']
+            except:
+                pass
+
+        if not params.get('d') and 'DEFAULT_GRAVATAR' in content.settings:
             default_gravatar_url = os.path.join(
                 content.settings['SITEURL'],
                 content.settings['DEFAULT_GRAVATAR']
             )
             params['d'] = default_gravatar_url
-        params['s'] = str(content.settings.get('GRAVATAR_SIZE', GRAVATAR_SIZE))
 
+        params['s'] = str(content.settings.get('GRAVATAR_SIZE', GRAVATAR_SIZE))
         gravatar_url = (
             'http://www.gravatar.com/avatar/' +
             hashlib.md5(gravatar.lower().encode('utf-8')).hexdigest()

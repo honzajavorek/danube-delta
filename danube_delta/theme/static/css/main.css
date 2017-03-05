@@ -348,8 +348,17 @@ h4.supressed {
     display: table;
 }
 
-.about-image {
+.about-image-crop {
     width: 10em;
+    height: 10em;
+    overflow: hidden;
+}
+
+.about-image img {
+    width: 100%;
+    position: relative;
+    top: 50%;
+    transform: perspective(1px) translateY(-50%);
 }
 
 .about-image,
