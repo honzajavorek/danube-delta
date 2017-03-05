@@ -45,17 +45,22 @@
                     {{ ABOUT_HEADING }}
                 {% else %}
                     {{ article.authors|join(',') }}
+
                     {% if article.twitter %}
-                        (<a href="http://twitter.com/{{ article.twitter }}" target="_blank">@{{ article.twitter }}</a>)
+                        &middot; <a href="http://twitter.com/{{ article.twitter }}" target="_blank">@{{ article.twitter }}</a>
                     {% endif %}
                 {% endif %}
             </h2>
             <div class="about-box">
-                {% if article.gravatar %}
-                    <img src="{{ article.gravatar }}" class="about-image img-rounded">
-                {% elif article.about_image %}
-                    <img src="{{ SITEURL }}/{{ article.about_image }}" class="about-image img-rounded">
-                {% endif %}
+                <div class="about-image img-rounded">
+                    <div class="about-image-crop">
+                        {% if article.gravatar %}
+                            <img src="{{ article.gravatar }}">
+                        {% elif article.about_image %}
+                            <img src="{{ SITEURL }}/{{ article.about_image }}">
+                        {% endif %}
+                    </div>
+                </div>
                 <div class="about-text">
                     {{ article.about|markdown }}
                 </div>
