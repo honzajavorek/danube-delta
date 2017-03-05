@@ -26,7 +26,14 @@ DEFAULT_DATE_FORMAT = '%x'
 PATH = 'content'
 DEFAULT_PAGINATION = False
 DEFAULT_CATEGORY = 'blog'
-MD_EXTENSIONS = ['codehilite(css_class=highlight)', 'headerid', 'extra']
+MARKDOWN = {
+    'extension_configs': {
+        'markdown.extensions.codehilite': {'css_class': 'highlight'},
+        'markdown.extensions.headerid': {},
+        'markdown.extensions.extra': {},
+    },
+    'output_format': 'html5',
+}
 
 
 # URL and save paths settings
