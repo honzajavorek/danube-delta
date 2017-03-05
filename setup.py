@@ -9,7 +9,7 @@ except ImportError:
     print(message, file=sys.stderr)
 
 
-version = '1.1.0'
+version = '1.2.0'
 
 
 install_requires = [
