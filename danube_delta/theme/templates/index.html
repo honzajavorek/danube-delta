@@ -44,9 +44,13 @@
     <div id="about" class="about">
         <h2 class="supressed">{{ AUTHOR }}</h2>
         <div class="about-box">
-            {% if ABOUT_IMAGE %}
-                <img src="{{ SITEURL }}/{{ ABOUT_IMAGE }}" class="about-image img-rounded">
-            {% endif %}
+            <div class="about-image">
+                <div class="about-image-crop img-rounded">
+                    {% if ABOUT_IMAGE %}
+                        <img src="{{ SITEURL }}/{{ ABOUT_IMAGE }}">
+                    {% endif %}
+                </div>
+            </div>
             <div class="about-text">
                 {{ ABOUT|markdown }}
             </div>
