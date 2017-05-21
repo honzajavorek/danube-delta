@@ -1,8 +1,8 @@
 sudo: false
 language: "python"
+cache: "pip"
 python:
   - "3.5"
-cache: "pip"
 env:
   global:  # 'travis encrypt PYPI_PASSWORD=... GH_TOKEN=...'
     - PYPI_USERNAME=honzajavorek
@@ -13,7 +13,9 @@ script:
   - "flake8"
   - "which blog"
   - "python -c 'from danube_delta.settings import *'"
+  - "py.test --cov-report="
 after_success:
+  - "coveralls"
   - "git config user.name 'Honza Javorek'"
   - "git config user.email 'mail@honzajavorek.cz'"
   - "python setup.py publish"
