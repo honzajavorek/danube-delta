@@ -33,6 +33,11 @@
     </div>
 
     <div class="content">
+        {% if article.is_outdated %}
+            <div class="alert alert-warning">
+                {{ OUTDATED_ARTICLE_WARNING|markdown }}
+            </div>
+        {% endif %}
         {{ article.content }}
     </div>
 

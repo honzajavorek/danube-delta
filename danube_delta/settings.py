@@ -36,6 +36,11 @@ MARKDOWN = {
 }
 
 
+# Outdated articles
+OUTDATED_ARTICLE_WARNING = None
+OUTDATED_ARTICLE_YEARS = 2
+
+
 # URL and save paths settings
 ARTICLE_URL = '{slug}'
 ARTICLE_SAVE_AS = '{slug}.html'
