@@ -3,7 +3,7 @@ import os
 from glob import glob
 
 import click
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageSequence
 
 from . import blog
 from .helpers import header, abort
@@ -53,15 +53,8 @@ def photos(context, path):
         image_basename = os.path.basename(filename).replace(' ', '-').lower()
         urls.append(os.path.join(url_prefix, image_basename))
         image_filename = os.path.join(images_dir, image_basename)
-
-        if os.path.isfile(image_filename):
-            click.echo('Already exists, skipping: {}'.format(image_filename))
-        else:
-            image = Image.open(filename)
-            image.thumbnail((IMAGE_MAX_SIZE, IMAGE_MAX_SIZE))
-            image.filter(ImageFilter.SHARPEN)
-            click.echo('Saving: {}'.format(image_filename))
-            image.save(image_filename, image.format, **IMAGE_SAVE_OPTIONS)
+        print(filename, image_filename)
+        import_image(filename, image_filename)
 
     content = '\n'
     for url in urls:
@@ -72,6 +65,29 @@ def photos(context, path):
     with click.open_file(article_filename, 'a') as f:
         f.write(content)
     click.launch(article_filename)
+
+
+def import_image(src_filename, dest_filename):
+    if os.path.isfile(dest_filename):
+        click.echo('Already exists, skipping: {}'.format(dest_filename))
+    else:
+        with Image.open(src_filename) as image:
+            image.thumbnail((IMAGE_MAX_SIZE, IMAGE_MAX_SIZE))
+
+            try:
+                image.filter(ImageFilter.SHARPEN)
+            except ValueError:
+                pass  # skip filtering for images which do not support it
+
+            click.echo('Saving: {}'.format(dest_filename))
+            options = dict(IMAGE_SAVE_OPTIONS)
+            if is_animated(image):
+                options.setdefault('save_all', True)
+            image.save(dest_filename, image.format, **options)
+
+
+def is_animated(image):
+    return len(list(ImageSequence.Iterator(image))) > 1
 
 
 def find_last_article(content_dir):
@@ -103,7 +119,7 @@ def find_last_article(content_dir):
 def find_images(path):
     for filename in find_files(path):
         try:
-            Image.open(filename)
+            Image.open(filename).close()
         except IOError:
             continue
         else:
