@@ -22,10 +22,18 @@ install_requires = [
     'markdown',
     'colorama',
     'requests',
-    'flake8',  # intentionally here - used by 'blog lint'
+    'flake8',  # intentionally also here - used by 'blog lint'
 ]
-tests_require = []
-release_requires = ['python-semantic-release']
+tests_require = [
+    'pytest-runner',
+    'pytest',
+    'pytest-cov',
+    'coveralls',
+    'flake8',
+]
+release_requires = [
+    'python-semantic-release',
+]
 
 
 setup(
