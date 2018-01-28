@@ -124,12 +124,12 @@
 {% block og %}
     {% if article.image %}
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="og:description" content="{{ self.title() }}">
-        <meta name="og:image" content="{{ article.image }}">
+        <meta property="og:description" content="{{ self.title() }}">
+        <meta property="og:image" content="{{ article.image }}">
     {% else %}
         <meta name="twitter:card" content="summary">
         {% if ABOUT_IMAGE %}
-            <meta name="og:image" content="{{ SITEURL }}/{{ ABOUT_IMAGE }}">
+            <meta property="og:image" content="{{ SITEURL }}/{{ ABOUT_IMAGE }}">
         {% endif %}
     {% endif %}
     {% if TWITTER_USERNAME_SITE %}

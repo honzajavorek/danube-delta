@@ -35,6 +35,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="{{ SITEURL }}/favicon.ico">
 
         {% block og %}
+            <meta property="og:title" content="{% block title %}{{ SITENAME }}{% endblock title %}">
             <meta name="twitter:card" content="summary">
             {% if TWITTER_USERNAME_SITE %}
                 <meta name="twitter:site" content="@{{ TWITTER_USERNAME_SITE }}">
@@ -43,10 +44,10 @@
                 <meta name="twitter:creator" content="@{{ TWITTER_USERNAME_AUTHOR }}">
             {% endif %}
             {% if SITESUBTITLE %}
-                <meta name="og:description" content="{{ SITESUBTITLE }}">
+                <meta property="og:description" content="{{ SITESUBTITLE }}">
             {% endif %}
             {% if ABOUT_IMAGE %}
-                <meta name="og:image" content="{{ SITEURL }}/{{ ABOUT_IMAGE }}">
+                <meta property="og:image" content="{{ SITEURL }}/{{ ABOUT_IMAGE }}">
             {% endif %}
         {% endblock og %}
     {% endblock %}
