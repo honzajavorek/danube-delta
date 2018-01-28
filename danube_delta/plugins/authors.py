@@ -34,7 +34,7 @@ def process_gravatar(content):
                 resp = requests.head(url)
                 resp.raise_for_status()
                 params['d'] = resp.headers['location']
-            except:
+            except Exception:
                 pass
 
         if not params.get('d') and 'DEFAULT_GRAVATAR' in content.settings:

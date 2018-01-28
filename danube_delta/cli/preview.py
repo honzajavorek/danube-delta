@@ -31,7 +31,7 @@ def preview(context):
 
             time.sleep(5)
             pelican(config, '--autoreload')
-        except:
+        except Exception:
             if server_proc is not None:
                 server_proc.kill()
             raise
