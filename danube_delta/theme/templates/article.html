@@ -122,6 +122,7 @@
 
 
 {% block og %}
+    <meta property="og:title" content="{{ self.title() }}">
     {% if article.image %}
         <meta name="twitter:card" content="summary_large_image">
         <meta property="og:description" content="{{ self.title() }}">

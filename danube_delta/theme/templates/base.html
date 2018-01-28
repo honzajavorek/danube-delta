@@ -35,7 +35,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="{{ SITEURL }}/favicon.ico">
 
         {% block og %}
-            <meta property="og:title" content="{% block title %}{{ SITENAME }}{% endblock title %}">
+            <meta property="og:title" content="{{ self.title() }}">
             <meta name="twitter:card" content="summary">
             {% if TWITTER_USERNAME_SITE %}
                 <meta name="twitter:site" content="@{{ TWITTER_USERNAME_SITE }}">
