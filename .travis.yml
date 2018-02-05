@@ -13,7 +13,7 @@ script:
   - "flake8"
   - "which blog"
   - "python -c 'from danube_delta.settings import *'"
-  - "py.test --cov-report="
+  - "pytest --cov-report="
 after_success:
   - "coveralls"
   - "git config user.name 'Honza Javorek'"

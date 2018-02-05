@@ -21,6 +21,7 @@ def test_find_images_handles_usual_types_of_images():
         'fire.gif',  # static gif
         'hedgehog.gif',  # animated gif
         'ukulele.jpg',  # jpg
+        'fishermen.jpg',  # mpo (jpg with additional metadata)
     }
 
 
@@ -32,10 +33,25 @@ def test_find_images_handles_usual_types_of_images():
         ('ukulele.jpg', False),
     ]
 )
-def test_is_animated(basename, result):
+def test_is_animated_gif(basename, result):
     filename = os.path.join(FIXTURES_DIR, 'photos', basename)
     with Image.open(filename) as image:
-        assert photos.is_animated(image) == result
+        assert photos.is_animated_gif(image) == result
+
+
+@pytest.mark.parametrize(
+    'basename,result',
+    [
+        ('fire.gif', 'GIF'),
+        ('hedgehog.gif', 'GIF'),
+        ('ukulele.jpg', 'JPEG'),
+        ('fishermen.jpg', 'JPEG'),
+    ]
+)
+def test_get_format(basename, result):
+    filename = os.path.join(FIXTURES_DIR, 'photos', basename)
+    with Image.open(filename) as image:
+        assert photos.get_format(image) == result
 
 
 @pytest.mark.parametrize(
@@ -49,6 +65,6 @@ def test_import_image_handles_usual_types_of_images(src_filename, tmpdir):
     with Image.open(src_filename) as src_image:
         with Image.open(dest_filename) as dest_image:
             assert (
-                photos.is_animated(src_image) ==
-                photos.is_animated(dest_image)
+                photos.is_animated_gif(src_image) ==
+                photos.is_animated_gif(dest_image)
             )
