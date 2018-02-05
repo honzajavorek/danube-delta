@@ -81,13 +81,21 @@ def import_image(src_filename, dest_filename):
 
             click.echo('Saving: {}'.format(dest_filename))
             options = dict(IMAGE_SAVE_OPTIONS)
-            if is_animated(image):
+            if is_animated_gif(image):
                 options.setdefault('save_all', True)
-            image.save(dest_filename, image.format, **options)
+
+            image.save(dest_filename, get_format(image), **options)
 
 
-def is_animated(image):
-    return len(list(ImageSequence.Iterator(image))) > 1
+def is_animated_gif(image):
+    return (
+        get_format(image) == 'GIF' and
+        len(list(ImageSequence.Iterator(image))) > 1
+    )
+
+
+def get_format(image):
+    return 'JPEG' if image.format == 'MPO' else image.format
 
 
 def find_last_article(content_dir):
