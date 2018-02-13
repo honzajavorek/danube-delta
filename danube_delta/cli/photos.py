@@ -33,7 +33,7 @@ def photos(context, path):
     click.echo(os.path.basename(article_filename))
 
     header('Looking for images...')
-    images = list(find_images(path))
+    images = list(sorted(find_images(path)))
     if not images:
         return click.secho('Found no images.', fg='red')
 
