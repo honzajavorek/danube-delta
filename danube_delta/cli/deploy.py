@@ -19,7 +19,7 @@ def deploy(context):
 
     header('Removing unnecessary output...')
     unnecessary_paths = [
-        'author', 'category', 'drafts', 'tag', 'feeds', 'tags.html',
+        'author', 'category', 'tag', 'feeds', 'tags.html',
         'authors.html', 'categories.html', 'archives.html',
     ]
     for path in unnecessary_paths:
