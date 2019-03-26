@@ -29,7 +29,7 @@ DEFAULT_CATEGORY = 'blog'
 MARKDOWN = {
     'extension_configs': {
         'markdown.extensions.codehilite': {'css_class': 'highlight'},
-        'markdown.extensions.headerid': {},
+        'markdown.extensions.toc': {},
         'markdown.extensions.extra': {},
     },
     'output_format': 'html5',
