@@ -26,7 +26,7 @@ install_requires = [
 ]
 tests_require = [
     'pytest-runner',
-    'pytest',
+    'pytest>=3.6',
     'pytest-cov',
     'coveralls',
     'flake8',
