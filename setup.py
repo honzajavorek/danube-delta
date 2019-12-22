@@ -44,7 +44,7 @@ setup(
     author='Honza Javorek',
     author_email='mail@honzajavorek.cz',
     url='http://github.com/honzajavorek/danube-delta',
-    license=open('LICENSE').read(),
+    license='MIT',
     packages=find_packages(),
     include_package_data=True,
     install_requires=install_requires,

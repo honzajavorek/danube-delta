@@ -30,7 +30,6 @@ Setup
         $ mkdir ./content ./output
         $ echo '/output' > .gitignore
 
-
 #.  Create ``./settings.py``:
 
     .. code:: python
@@ -43,13 +42,11 @@ Setup
         if PRODUCTION:
             SITEURL = 'http://example.com'
 
-
 #.  Install ``danube_delta``, globally:
 
     .. code:: shell
 
         $ sudo -H pip install danube_delta
-
 
 #.  In the root of your blog directory you can now use the ``blog`` CLI:
 
