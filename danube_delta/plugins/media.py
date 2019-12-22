@@ -152,7 +152,7 @@ def get_image_filename(content_dir, img_src):
 
 
 def get_image_src(filename):
-    return re.sub(r'.*/images/', '{filename}/images/', filename)
+    return re.sub(r'.*/images/', '{static}/images/', filename)
 
 
 def create_thumbnail(filename):

@@ -32,7 +32,7 @@ def write(context):
         file_content += '{}: {}\n'.format(key, value)
     file_content += '\n\n'
     file_content += 'Text...\n\n'
-    file_content += '![image description]({filename}/images/my-photo.jpg)\n\n'
+    file_content += '![image description]({static}/images/my-photo.jpg)\n\n'
     file_content += 'Text...\n\n'
 
     os.makedirs(config['CONTENT_DIR'], exist_ok=True)

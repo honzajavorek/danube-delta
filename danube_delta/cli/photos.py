@@ -43,7 +43,7 @@ def photos(context, path):
     if not click.confirm('\nAdd these images to the latest article'):
         abort(config)
 
-    url_prefix = os.path.join('{filename}', IMAGES_PATH)
+    url_prefix = os.path.join('{static}', IMAGES_PATH)
     images_dir = os.path.join(config['CONTENT_DIR'], IMAGES_PATH)
     os.makedirs(images_dir, exist_ok=True)
 

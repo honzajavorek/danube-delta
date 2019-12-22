@@ -24,6 +24,6 @@ def attach_featured_image(content):
                     image = os.path.join(content.settings['SITEURL'], image)
 
     if image:
-        content.image = image.format(filename=content.get_siteurl())
+        content.image = image.format(static=content.get_siteurl())
     else:
         content.image = None
