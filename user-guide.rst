@@ -41,18 +41,7 @@ ridiculous OS on the planet, you can't just install whatever is in the
 
         (venv) D:\blog.python.cz> python -m pip install pip --upgrade
 
-2.  Manually download the ``lxml`` library in form of a *wheel* from
-    `this unofficial
-    registry <http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml>`__. Choose
-    version appropriate for your Python and OS versions (e.g. ``cp35``
-    means Python 3.5, ``win32`` means 32bit OS). Then install it inside
-    your virtualenv:
-
-    ::
-
-        (venv) D:\blog.python.cz> pip install lxml-3.6.0-cp35-cp35m-win32.whl
-
-3.  Now proceed with standard installation:
+2.  Now proceed with standard installation:
 
     ::
 
