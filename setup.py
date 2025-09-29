@@ -23,6 +23,7 @@ install_requires = [
     'colorama',
     'requests',
     'flake8',  # intentionally also here - used by 'blog lint'
+    'pytz',
 ]
 tests_require = [
     'pytest-runner',
