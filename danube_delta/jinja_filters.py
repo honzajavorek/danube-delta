@@ -4,7 +4,7 @@ import urllib.parse
 from datetime import date, datetime
 
 import markdown as md
-from jinja2 import Markup
+from markupsafe import Markup
 
 
 JINJA_FILTERS = {}
